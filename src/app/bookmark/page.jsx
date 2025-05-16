@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import styles from './search.module.scss';
+import styles from './bookmark.module.scss';
 import classNames from 'classnames';
 import SVGAlertCircle from '@/components/svg/SVGAlertCircle';
 import useWindowSize from '@/utils/useWindowSize';
@@ -9,7 +9,7 @@ import Loading from '../loading';
 
 export default function Bookmark() {
   const [bookmarks, setBookmarks] = useState(null);
-  const [groupedBookmarks, setGroupedBookmarks] = useState({});
+  const [sortedBookmarks, setSortedBookmarks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { windowWidth } = useWindowSize();
 
@@ -29,55 +29,41 @@ export default function Bookmark() {
           const parsedBookmarks = JSON.parse(storedBookmarks);
           setBookmarks(parsedBookmarks);
 
-          // 북마크를 책별로 그룹화
-          const groupedByBook = {};
+          // 북마크를 평탄화하고 시간순으로 정렬
+          const flattenedBookmarks = [];
 
-          Object.entries(parsedBookmarks).forEach(([bookTitle, chapters]) => {
-            // 책 이름을 더 보기 좋게 포맷팅
-            const formattedBookTitle = bookTitle.replace(/-/g, ' ');
-            groupedByBook[bookTitle] = {
-              title: formattedBookTitle,
-              items: [],
-            };
-
+          Object.entries(parsedBookmarks).forEach(([bookId, chapters]) => {
             Object.entries(chapters).forEach(([chapter, sections]) => {
-              // sections는 이제 { '01-1': ['소제목1', '소제목2'], '01-2': ['소제목1'] } 형태
               Object.entries(sections).forEach(([section, headings]) => {
-                // 챕터 번호 (예: chapter01) 에서 숫자 부분만 추출
                 const chapterNum = chapter.match(/\d+/);
                 const chapterDisplay = chapterNum
                   ? `Chapter ${chapterNum[0]}`
                   : chapter;
 
-                // 각 소제목에 대해 북마크 아이템 생성
                 headings.forEach((heading) => {
-                  groupedByBook[bookTitle].items.push({
-                    id: `${bookTitle}/${chapter}/${heading}`,
+                  flattenedBookmarks.push({
+                    id: `${bookId}/${chapter}/${heading}`,
                     title: heading,
+                    bookId,
                     chapter: chapterDisplay,
                     section: section,
-                    url: `/${bookTitle}/${chapter}#${createUrlHash(heading)}`,
-                    description: `${chapter}`,
+                    url: `/${bookId}/${chapter}#${createUrlHash(heading)}`,
                   });
                 });
               });
             });
-
-            // 북마크 순서를 챕터 순으로 정렬
-            groupedByBook[bookTitle].items.sort((a, b) => {
-              return a.chapter.localeCompare(b.chapter);
-            });
           });
 
-          setGroupedBookmarks(groupedByBook);
+          // 북마크를 추가된 순서대로 정렬 (localStorage에 저장된 순서)
+          setSortedBookmarks(flattenedBookmarks);
         } else {
           setBookmarks({});
-          setGroupedBookmarks({});
+          setSortedBookmarks([]);
         }
       } catch (error) {
         console.error('Error fetching bookmarks:', error);
         setBookmarks({});
-        setGroupedBookmarks({});
+        setSortedBookmarks([]);
       } finally {
         setIsLoading(false);
       }
@@ -116,35 +102,17 @@ export default function Bookmark() {
         }
       }
 
-      // 그룹화된 북마크에서도 해당 항목 삭제
-      const updatedGroupedBookmarks = { ...groupedBookmarks };
-
-      if (updatedGroupedBookmarks[bookTitle]) {
-        updatedGroupedBookmarks[bookTitle].items = updatedGroupedBookmarks[
-          bookTitle
-        ].items.filter((item) => item.id !== bookmarkId);
-
-        // 책에 북마크가 없으면 책 자체를 삭제
-        if (updatedGroupedBookmarks[bookTitle].items.length === 0) {
-          delete updatedGroupedBookmarks[bookTitle];
-        }
-      }
+      // 정렬된 북마크에서도 해당 항목 삭제
+      const updatedSortedBookmarks = sortedBookmarks.filter(
+        (item) => item.id !== bookmarkId,
+      );
 
       localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
       setBookmarks(updatedBookmarks);
-      setGroupedBookmarks(updatedGroupedBookmarks);
+      setSortedBookmarks(updatedSortedBookmarks);
     } catch (error) {
       console.error('Error removing bookmark:', error);
     }
-  };
-
-  // 총 북마크 수 계산
-  const getTotalBookmarkCount = () => {
-    let total = 0;
-    Object.values(groupedBookmarks).forEach((book) => {
-      total += book.items.length;
-    });
-    return total;
   };
 
   if (isLoading) {
@@ -156,10 +124,10 @@ export default function Bookmark() {
       <div className={classNames(styles.innerLayout)}>
         <div className={classNames(styles.title)}>
           <strong>북마크</strong>
-          <span>저장된 북마크: {getTotalBookmarkCount()}건</span>
+          <span>저장된 북마크: {sortedBookmarks.length}건</span>
         </div>
 
-        {Object.keys(groupedBookmarks).length === 0 ? (
+        {sortedBookmarks.length === 0 ? (
           <div className={styles.notFound}>
             <SVGAlertCircle size={windowWidth < 640 ? 80 : 100} />
             <p>
@@ -168,35 +136,46 @@ export default function Bookmark() {
             </p>
           </div>
         ) : (
-          <div className={styles.bookList}>
-            {Object.entries(groupedBookmarks).map(([bookId, book]) => (
-              <div key={bookId} className={styles.bookSection}>
-                <h2 className={styles.bookTitle}>{book.title}</h2>
-                <ul>
-                  {book.items.map((bookmark, idx) => (
-                    <li key={idx} className={classNames(styles.resultSection)}>
-                      <Link href={bookmark.url}>
-                        <p className={classNames(styles.subTitle)}>
-                          {bookmark.title}
-                        </p>
-                        <p className={classNames(styles.path)}>
-                          {bookmark.chapter}
-                          {bookmark.section && ` → ${bookmark.section}`}
-                          {` → ${bookmark.title}`}
-                        </p>
+          <div className={styles.bookmarkList}>
+            {sortedBookmarks.map((bookmark, idx) => (
+              <div key={idx} className={styles.resultSection}>
+                <Link href={bookmark.url}>
+                  <p className={classNames(styles.subTitle)}>
+                    {bookmark.title}
+                  </p>
+                  <ol className={styles.breadcrumb}>
+                    <li>
+                      <Link href={`/${bookmark.bookId}`}>
+                        {bookmark.bookId.replace(/-/g, ' ')}
                       </Link>
-                      <button
-                        className={styles.removeButton}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          removeBookmark(bookmark.id);
-                        }}
-                      >
-                        삭제
-                      </button>
                     </li>
-                  ))}
-                </ul>
+                    <li>
+                      <Link href={`/${bookmark.bookId}/${bookmark.chapter}`}>
+                        {bookmark.chapter}
+                      </Link>
+                    </li>
+                    {bookmark.section && (
+                      <li>
+                        <Link
+                          href={`/${bookmark.bookId}/${
+                            bookmark.chapter
+                          }#${createUrlHash(bookmark.title)}`}
+                        >
+                          {bookmark.section}
+                        </Link>
+                      </li>
+                    )}
+                  </ol>
+                </Link>
+                <button
+                  className={styles.removeButton}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    removeBookmark(bookmark.id);
+                  }}
+                >
+                  삭제
+                </button>
               </div>
             ))}
           </div>
