@@ -1,8 +1,12 @@
-export default function SVGBookmarkFill({ color = 'currentColor' }) {
+export default function SVGBookmarkFill({
+  width = 40,
+  height = 40,
+  color = 'currentColor',
+}) {
   return (
     <svg
-      width="40"
-      height="40"
+      width={width}
+      height={height}
       viewBox="0 0 40 40"
       fill={color}
       xmlns="http://www.w3.org/2000/svg"

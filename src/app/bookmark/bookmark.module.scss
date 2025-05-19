@@ -1,26 +1,95 @@
 @import '@/styles/function.scss';
 
-main.main {
+.main {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  padding-top: fcSize(24, 40);
+}
+
+.bookmark__main {
+  margin-right: 30rem;
+}
+
+.main__inner {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  margin: 0 auto;
 }
 
 .wrapper {
   width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  min-height: 100vh;
+  background-color: var(--grayLv1);
 }
 
 .innerLayout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
   display: flex;
-  flex-direction: column;
-  width: fcSize(342, 990);
-  margin-top: 10vh;
-  height: auto;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 1rem;
+  }
+}
+
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.sidebarTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--grayLv4);
+}
+
+.bookList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bookItem {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: var(--grayLv4);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--grayLv1);
+    color: var(--primary);
+  }
+
+  &.active {
+    background-color: var(--primary);
+    color: var(--white);
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
 }
 
 .title {
@@ -77,6 +146,13 @@ main.main {
       text-decoration-line: underline;
       text-underline-position: under;
     }
+  }
+
+  .timestamp {
+    display: block;
+    font-size: fcSize(14, 16);
+    color: var(--grayLv3);
+    margin-top: 8px;
   }
 
   p.path {
@@ -147,7 +223,7 @@ div.notFound {
 
   p {
     font-size: fcSize(16, 18);
-    color: var(--grayLv4);
+    color: var(--grayLv3);
   }
 }
 
@@ -185,11 +261,10 @@ div.notFound {
   }
 }
 
-.bookList {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
+@media screen and (max-width: 1024px) {
+  .bookmark__main {
+    margin-right: 0;
+  }
 }
 
 .bookSection {

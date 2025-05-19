@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
+import BookmarkIcon from '@/components/common/icons/BookmarkIcon';
 
 export function useHeadingBookmark() {
   useEffect(() => {
@@ -47,13 +49,22 @@ export function useHeadingBookmark() {
 
       if (isBookmarked) {
         // 해당 섹션의 소제목 리스트에 추가
-        if (!bookmarks[book][chapter][currentSection].includes(heading)) {
-          bookmarks[book][chapter][currentSection].push(heading);
+        const existingBookmark = bookmarks[book][chapter][currentSection].find(
+          (item) => item.title === heading,
+        );
+
+        if (!existingBookmark) {
+          bookmarks[book][chapter][currentSection].push({
+            title: heading,
+            timestamp: new Date().toISOString(),
+          });
         }
       } else {
         // 해당 섹션의 소제목 리스트에서 제거
-        const headingIndex =
-          bookmarks[book][chapter][currentSection].indexOf(heading);
+        const headingIndex = bookmarks[book][chapter][currentSection].findIndex(
+          (item) => item.title === heading,
+        );
+
         if (headingIndex !== -1) {
           bookmarks[book][chapter][currentSection].splice(headingIndex, 1);
         }
@@ -80,7 +91,9 @@ export function useHeadingBookmark() {
       const currentSection = chapterNum ? `${chapterNum}-1` : chapter;
 
       return (
-        bookmarks[book]?.[chapter]?.[currentSection]?.includes(heading) || false
+        bookmarks[book]?.[chapter]?.[currentSection]?.some(
+          (item) => item.title === heading,
+        ) || false
       );
     };
 
@@ -110,8 +123,11 @@ export function useHeadingBookmark() {
         border: none;
         padding: 0;
         outline: none;
-        opacity: 0;
+        opacity: ${isBookmarked(book, chapter, headingText) ? '1' : '0'};
         transition: opacity 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       `;
       bookmark.setAttribute('aria-label', 'Toggle bookmark');
       bookmark.type = 'button';
@@ -119,11 +135,25 @@ export function useHeadingBookmark() {
       // Set initial bookmark state
       const bookmarked = isBookmarked(book, chapter, headingText);
 
-      // Set SVG icons using imported components rendered to string
-      const filledSVG = `<svg width="20" height="20" viewBox="0 0 40 40" fill="#2E6FF2" xmlns="http://www.w3.org/2000/svg"><path d="M8 4.5C7.17157 4.5 6.5 5.17157 6.5 6V34C6.5 34.5512 6.80235 35.0581 7.28743 35.3199C7.7725 35.5818 8.36212 35.5565 8.82298 35.2541L19.7257 28.0992C19.8922 27.9899 20.1078 27.9899 20.2743 28.0992L31.177 35.2541C31.6379 35.5565 32.2275 35.5818 32.7126 35.3199C33.1976 35.0581 33.5 34.5512 33.5 34V6C33.5 5.17157 32.8284 4.5 32 4.5H8Z" /></svg>`;
-      const outlineSVG = `<svg width="20" height="20" viewBox="0 0 40 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 6C6.5 5.17157 7.17157 4.5 8 4.5H32C32.8284 4.5 33.5 5.17157 33.5 6V34C33.5 34.5512 33.1976 35.0581 32.7126 35.3199C32.2275 35.5818 31.6379 35.5565 31.177 35.2541L20.2743 28.0992C20.1078 27.9899 19.8922 27.9899 19.7257 28.0992L8.82298 35.2541C8.36212 35.5565 7.7725 35.5818 7.28743 35.3199C6.80235 35.0581 6.5 34.5512 6.5 34V6ZM9.5 7.5V31.2215L18.0797 25.591C19.2456 24.8259 20.7544 24.8259 21.9203 25.591L30.5 31.2215V7.5H9.5Z" /></svg>`;
+      // Create container for React component
+      const iconContainer = document.createElement('div');
+      iconContainer.style.cssText = `
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-      bookmark.innerHTML = bookmarked ? filledSVG : outlineSVG;
+        & svg {
+          width: 24px;
+          height: 24px;
+        }
+      `;
+
+      // Create React root and render BookmarkIcon
+      const root = createRoot(iconContainer);
+      root.render(<BookmarkIcon isFilled={bookmarked} />);
+      bookmark.appendChild(iconContainer);
 
       // Add click event
       bookmark.addEventListener('click', (e) => {
@@ -133,8 +163,9 @@ export function useHeadingBookmark() {
         const newState = !isBookmarked(book, chapter, headingText);
         saveBookmark(book, chapter, headingText, newState);
 
-        // Update icon
-        bookmark.innerHTML = newState ? filledSVG : outlineSVG;
+        // Update icon and opacity
+        root.render(<BookmarkIcon isFilled={newState} />);
+        bookmark.style.opacity = newState ? '1' : '0';
       });
 
       // Insert bookmark at the beginning of the heading
@@ -145,10 +176,25 @@ export function useHeadingBookmark() {
         bookmark.style.opacity = '1';
       });
 
-      // Hide bookmark on mouseleave (always hide when mouse leaves, even if bookmarked)
+      // Hide bookmark on mouseleave (only if not bookmarked)
       heading.addEventListener('mouseleave', () => {
-        bookmark.style.opacity = '0';
+        if (!isBookmarked(book, chapter, headingText)) {
+          bookmark.style.opacity = '0';
+        }
       });
     });
+
+    return () => {
+      // Cleanup React roots
+      headings.forEach((heading) => {
+        const iconContainer = heading.querySelector('div');
+        if (iconContainer) {
+          const root = iconContainer._reactRootContainer;
+          if (root) {
+            root.unmount();
+          }
+        }
+      });
+    };
   }, []);
 }

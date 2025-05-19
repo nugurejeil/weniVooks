@@ -10,6 +10,8 @@ import Loading from '../loading';
 export default function Bookmark() {
   const [bookmarks, setBookmarks] = useState(null);
   const [sortedBookmarks, setSortedBookmarks] = useState([]);
+  const [filteredBookmarks, setFilteredBookmarks] = useState([]);
+  const [selectedBook, setSelectedBook] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
   const { windowWidth } = useWindowSize();
 
@@ -40,14 +42,17 @@ export default function Bookmark() {
                   ? `Chapter ${chapterNum[0]}`
                   : chapter;
 
-                headings.forEach((heading) => {
+                headings.forEach((headingData) => {
                   flattenedBookmarks.push({
-                    id: `${bookId}/${chapter}/${heading}`,
-                    title: heading,
+                    id: `${bookId}/${chapter}/${headingData.title}`,
+                    title: headingData.title,
                     bookId,
                     chapter: chapterDisplay,
                     section: section,
-                    url: `/${bookId}/${chapter}#${createUrlHash(heading)}`,
+                    url: `/${bookId}/${chapter}#${createUrlHash(
+                      headingData.title,
+                    )}`,
+                    timestamp: headingData.timestamp,
                   });
                 });
               });
@@ -56,14 +61,17 @@ export default function Bookmark() {
 
           // 북마크를 추가된 순서대로 정렬 (localStorage에 저장된 순서)
           setSortedBookmarks(flattenedBookmarks);
+          setFilteredBookmarks(flattenedBookmarks);
         } else {
           setBookmarks({});
           setSortedBookmarks([]);
+          setFilteredBookmarks([]);
         }
       } catch (error) {
         console.error('Error fetching bookmarks:', error);
         setBookmarks({});
         setSortedBookmarks([]);
+        setFilteredBookmarks([]);
       } finally {
         setIsLoading(false);
       }
@@ -76,6 +84,17 @@ export default function Bookmark() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // 북마크 필터링
+  useEffect(() => {
+    if (selectedBook === 'all') {
+      setFilteredBookmarks(sortedBookmarks);
+    } else {
+      setFilteredBookmarks(
+        sortedBookmarks.filter((bookmark) => bookmark.bookId === selectedBook),
+      );
+    }
+  }, [selectedBook, sortedBookmarks]);
 
   // Function to remove a bookmark
   const removeBookmark = (bookmarkId) => {
@@ -119,67 +138,112 @@ export default function Bookmark() {
     return <Loading />;
   }
 
+  // 북마크가 있는 책 목록 생성
+  const bookList = bookmarks ? Object.keys(bookmarks) : [];
+
   return (
     <div className={classNames(styles.wrapper)}>
       <div className={classNames(styles.innerLayout)}>
-        <div className={classNames(styles.title)}>
-          <strong>북마크</strong>
-          <span>저장된 북마크: {sortedBookmarks.length}건</span>
-        </div>
+        <aside className={styles.sidebar}>
+          <div className={styles.sidebarTitle}>북마크 필터</div>
+          <ul className={styles.bookList}>
+            <li>
+              <button
+                className={classNames(styles.bookItem, {
+                  [styles.active]: selectedBook === 'all',
+                })}
+                onClick={() => setSelectedBook('all')}
+              >
+                전체보기
+              </button>
+            </li>
+            {bookList.map((book) => (
+              <li key={book}>
+                <button
+                  className={classNames(styles.bookItem, {
+                    [styles.active]: selectedBook === book,
+                  })}
+                  onClick={() => setSelectedBook(book)}
+                >
+                  {book.replace(/-/g, ' ')}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </aside>
 
-        {sortedBookmarks.length === 0 ? (
-          <div className={styles.notFound}>
-            <SVGAlertCircle size={windowWidth < 640 ? 80 : 100} />
-            <p>
-              <span>저장된 북마크가 없습니다.</span>
-              <span>콘텐츠를 읽는 동안 북마크를 추가해보세요.</span>
-            </p>
+        <div className={styles.content}>
+          <div className={classNames(styles.title)}>
+            <strong>북마크</strong>
+            <span>저장된 북마크: {filteredBookmarks.length}건</span>
           </div>
-        ) : (
-          <div className={styles.bookmarkList}>
-            {sortedBookmarks.map((bookmark, idx) => (
-              <div key={idx} className={styles.resultSection}>
-                <Link href={bookmark.url}>
-                  <p className={classNames(styles.subTitle)}>
-                    {bookmark.title}
-                  </p>
-                  <ol className={styles.breadcrumb}>
-                    <li>
-                      <Link href={`/${bookmark.bookId}`}>
-                        {bookmark.bookId.replace(/-/g, ' ')}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href={`/${bookmark.bookId}/${bookmark.chapter}`}>
-                        {bookmark.chapter}
-                      </Link>
-                    </li>
-                    {bookmark.section && (
+
+          {filteredBookmarks.length === 0 ? (
+            <div className={styles.notFound}>
+              <SVGAlertCircle size={windowWidth < 640 ? 80 : 100} />
+              <p>
+                <span>저장된 북마크가 없습니다.</span>
+                <span>콘텐츠를 읽는 동안 북마크를 추가해보세요.</span>
+              </p>
+            </div>
+          ) : (
+            <div className={styles.bookmarkList}>
+              {filteredBookmarks.map((bookmark, idx) => (
+                <div key={idx} className={styles.resultSection}>
+                  <Link href={bookmark.url}>
+                    <p className={classNames(styles.subTitle)}>
+                      {bookmark.title}
+                    </p>
+                    <ol className={styles.breadcrumb}>
                       <li>
-                        <Link
-                          href={`/${bookmark.bookId}/${
-                            bookmark.chapter
-                          }#${createUrlHash(bookmark.title)}`}
-                        >
-                          {bookmark.section}
+                        <Link href={`/${bookmark.bookId}`}>
+                          {bookmark.bookId.replace(/-/g, ' ')}
                         </Link>
                       </li>
-                    )}
-                  </ol>
-                </Link>
-                <button
-                  className={styles.removeButton}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    removeBookmark(bookmark.id);
-                  }}
-                >
-                  삭제
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+                      <li>
+                        <Link href={`/${bookmark.bookId}/${bookmark.chapter}`}>
+                          {bookmark.chapter}
+                        </Link>
+                      </li>
+                      {bookmark.section && (
+                        <li>
+                          <Link
+                            href={`/${bookmark.bookId}/${
+                              bookmark.chapter
+                            }#${createUrlHash(bookmark.title)}`}
+                          >
+                            {bookmark.section}
+                          </Link>
+                        </li>
+                      )}
+                    </ol>
+                    <time
+                      className={styles.timestamp}
+                      dateTime={bookmark.timestamp}
+                    >
+                      {new Date(bookmark.timestamp).toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </time>
+                  </Link>
+                  <button
+                    className={styles.removeButton}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      removeBookmark(bookmark.id);
+                    }}
+                  >
+                    삭제
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

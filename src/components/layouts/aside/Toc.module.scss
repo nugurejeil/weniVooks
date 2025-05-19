@@ -9,6 +9,33 @@
     padding-bottom: 0.5rem;
   }
 }
+
+.bookFilter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid var(--grayLv2);
+}
+
+.bookFilterBtn {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: var(--grayLv1);
+  color: var(--grayLv4);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--grayLv2);
+  }
+
+  &.active {
+    background-color: var(--primary);
+    color: white;
+  }
+}
+
 .toc {
   a {
     display: block;
@@ -37,4 +64,10 @@
   & > li > ol > li > ol > li > a {
     padding-left: 6rem;
   }
+}
+
+.empty {
+  padding: 20px;
+  text-align: center;
+  color: var(--grayLv3);
 }
