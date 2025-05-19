@@ -1,0 +1,75 @@
+@import '@/styles/theme.scss';
+
+.bookSearch {
+  position: relative;
+  width: 100%;
+  max-width: 50rem;
+  margin: clamp(40px, 5vw, 60px) auto clamp(30px, 4vw, 40px);
+
+  input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 6rem;
+    border-radius: 1.6rem;
+    background: var(--grayLv1);
+    border: 2px solid #2E6FF2;
+    padding: 0 5.8rem 0 2rem;
+    box-sizing: border-box;
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 2.2rem;
+    color: var(--text);
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--grayLv3) url("/images/icons/icon-x.svg") no-repeat 50% 50% / 1.2rem 1.2rem;
+      cursor: pointer;
+    }
+
+    &::placeholder {
+      color: var(--grayLv3);
+    }
+
+    &:active,
+    &:focus {
+      outline: 2px solid #2E6FF2;
+    }
+  }
+}
+
+.btnSearch {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.8rem;
+  background-color: transparent;
+  color: var(--grayLv4);
+  transition: all 0.2s ease;
+
+  &:hover {
+    path {
+      fill: #2E6FF2;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid #2E6FF2;
+    outline-offset: 2px;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .bookSearch {
+    width: 100%;
+    margin: 60px auto 40px;
+  }
+} 

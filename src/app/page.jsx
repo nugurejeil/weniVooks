@@ -7,6 +7,7 @@ import BookList from '@/components/book/BookList';
 import Header from '@/components/layouts/header/Header';
 import BtnTop from '@/components/common/button/BtnTop';
 import FilterNav from '@/components/common/nav/FilterNav';
+import BookSearchForm from '@/components/search/BookSearchForm';
 
 export default function Home() {
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -30,6 +31,7 @@ export default function Home() {
       <div className="layout-grow">
         <Banner />
         <div className="max-w-[1200px] mx-auto px-5">
+          <BookSearchForm />
           <FilterNav
             options={filterOptions}
             selectedValue={selectedFilter}
