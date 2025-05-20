@@ -129,90 +129,106 @@ export default function Bookmark() {
   }
 
   return (
-    <div className={classNames(styles.wrapper)}>
-      <div className={classNames(styles.innerLayout)}>
-        {windowWidth > 640 ? (
+    <>
+      {windowWidth <= 1024 ? (
+        <BookmarkAsideMobile
+          onFilterChange={handleFilterChange}
+          selectedBook={selectedBook}
+          bookList={Object.keys(bookmarks || {})}
+        />
+      ) : null}
+
+      <div className="content__wrap">
+        <main className="main">
+          <div className="main__inner">
+            <div className={classNames(styles.wrapper)}>
+              <div className={classNames(styles.innerLayout)}>
+                <div className={styles.content}>
+                  <div className={classNames(styles.title)}>
+                    <strong>북마크</strong>
+                    <span>저장된 북마크: {filteredBookmarks.length}건</span>
+                  </div>
+
+                  {filteredBookmarks.length === 0 ? (
+                    <div className={styles.notFound}>
+                      <SVGAlertCircle size={windowWidth < 640 ? 80 : 100} />
+                      <p>
+                        <span>저장된 북마크가 없습니다.</span>
+                        <span>콘텐츠를 읽는 동안 북마크를 추가해보세요.</span>
+                      </p>
+                    </div>
+                  ) : (
+                    <div className={styles.bookmarkList}>
+                      {filteredBookmarks.map((bookmark, idx) => (
+                        <div key={idx} className={styles.resultSection}>
+                          <Link href={bookmark.url}>
+                            <p className={classNames(styles.subTitle)}>
+                              {bookmark.title}
+                            </p>
+                            <ol className={styles.breadcrumb}>
+                              <li>
+                                <Link href={`/${bookmark.bookId}`}>
+                                  {bookmark.bookId.replace(/-/g, ' ')}
+                                </Link>
+                              </li>
+                              <li>
+                                <Link
+                                  href={`/${bookmark.bookId}/${bookmark.chapter}`}
+                                >
+                                  {bookmark.chapter}
+                                </Link>
+                              </li>
+                              {bookmark.section && (
+                                <li>
+                                  <Link
+                                    href={`/${bookmark.bookId}/${
+                                      bookmark.chapter
+                                    }#${createUrlHash(bookmark.title)}`}
+                                  >
+                                    {bookmark.section}
+                                  </Link>
+                                </li>
+                              )}
+                            </ol>
+                            <time
+                              className={styles.timestamp}
+                              dateTime={bookmark.timestamp}
+                            >
+                              {new Date(bookmark.timestamp).toLocaleString(
+                                'ko-KR',
+                                {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                },
+                              )}
+                            </time>
+                          </Link>
+                          <button
+                            className={styles.btnDelete}
+                            onClick={() => removeBookmark(bookmark.id)}
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        {windowWidth > 1024 ? (
           <BookmarkAsidePC
             onFilterChange={handleFilterChange}
             selectedBook={selectedBook}
+            bookList={Object.keys(bookmarks || {})}
           />
-        ) : (
-          <BookmarkAsideMobile
-            onFilterChange={handleFilterChange}
-            selectedBook={selectedBook}
-          />
-        )}
-
-        <div className={styles.content}>
-          <div className={classNames(styles.title)}>
-            <strong>북마크</strong>
-            <span>저장된 북마크: {filteredBookmarks.length}건</span>
-          </div>
-
-          {filteredBookmarks.length === 0 ? (
-            <div className={styles.notFound}>
-              <SVGAlertCircle size={windowWidth < 640 ? 80 : 100} />
-              <p>
-                <span>저장된 북마크가 없습니다.</span>
-                <span>콘텐츠를 읽는 동안 북마크를 추가해보세요.</span>
-              </p>
-            </div>
-          ) : (
-            <div className={styles.bookmarkList}>
-              {filteredBookmarks.map((bookmark, idx) => (
-                <div key={idx} className={styles.resultSection}>
-                  <Link href={bookmark.url}>
-                    <p className={classNames(styles.subTitle)}>
-                      {bookmark.title}
-                    </p>
-                    <ol className={styles.breadcrumb}>
-                      <li>
-                        <Link href={`/${bookmark.bookId}`}>
-                          {bookmark.bookId.replace(/-/g, ' ')}
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href={`/${bookmark.bookId}/${bookmark.chapter}`}>
-                          {bookmark.chapter}
-                        </Link>
-                      </li>
-                      {bookmark.section && (
-                        <li>
-                          <Link
-                            href={`/${bookmark.bookId}/${
-                              bookmark.chapter
-                            }#${createUrlHash(bookmark.title)}`}
-                          >
-                            {bookmark.section}
-                          </Link>
-                        </li>
-                      )}
-                    </ol>
-                    <time
-                      className={styles.timestamp}
-                      dateTime={bookmark.timestamp}
-                    >
-                      {new Date(bookmark.timestamp).toLocaleString('ko-KR', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </time>
-                  </Link>
-                  <button
-                    className={styles.btnDelete}
-                    onClick={() => removeBookmark(bookmark.id)}
-                  >
-                    삭제
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        ) : null}
       </div>
-    </div>
+    </>
   );
 }
