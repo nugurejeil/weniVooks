@@ -98,6 +98,8 @@
   align-items: center;
   margin-bottom: fcSize(16, 20);
   align-self: flex-start;
+  width: 100%;
+  justify-content: space-between;
 
   strong {
     max-width: 500px;
@@ -115,6 +117,33 @@
     font-weight: 600;
     line-height: fcSize(24, 32);
     white-space: nowrap;
+  }
+
+  .sortButtons {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+
+    .sortButton {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--grayLv2);
+      border-radius: 0.25rem;
+      background: none;
+      color: var(--grayLv3);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--grayLv1);
+      }
+
+      &.active {
+        background: var(--grayLv2);
+        color: var(--grayLv4);
+        border-color: var(--grayLv2);
+      }
+    }
   }
 }
 

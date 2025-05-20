@@ -38,15 +38,19 @@ export default function BookmarkAsideMobile({
   const handleFocusFirst = (e) => {
     if (!e.shiftKey && e.key === 'Tab') {
       e.preventDefault();
-      const firstItem = menuRef.current.querySelector('button');
-      firstItem.focus();
+      const firstItem = menuRef.current?.querySelector('button');
+      if (firstItem) {
+        firstItem.focus();
+      }
     }
   };
 
   const handleFocusLast = (e) => {
     if (e.shiftKey && e.key === 'Tab') {
       e.preventDefault();
-      lastBtn.current.focus();
+      if (lastBtn.current) {
+        lastBtn.current.focus();
+      }
     }
   };
 
@@ -56,7 +60,9 @@ export default function BookmarkAsideMobile({
     if (!isMenuShow) {
       handlePreventScroll();
       setTimeout(() => {
-        lastBtn.current.focus();
+        if (lastBtn.current) {
+          lastBtn.current.focus();
+        }
       }, 100);
     } else {
       handleAllowScroll();
@@ -87,12 +93,12 @@ export default function BookmarkAsideMobile({
     const handleOutsideClick = (e) => {
       const isToc = e.target.closest('.toc');
       if (isMenuShow && !isToc) {
-        toggleMenu(false);
+        toggleMenu();
       }
     };
     const handleESC = (e) => {
       if (isMenuShow && e.key === 'Escape') {
-        toggleMenu(false);
+        toggleMenu();
       }
     };
 
@@ -100,13 +106,19 @@ export default function BookmarkAsideMobile({
       setTimeout(() => {
         window.addEventListener('click', handleOutsideClick);
         window.addEventListener('keydown', handleESC);
-        const firstItem = menuRef.current.querySelector('button');
-        firstItem.addEventListener('keydown', handleFocusLast);
+        const firstItem = menuRef.current?.querySelector('button');
+        if (firstItem) {
+          firstItem.addEventListener('keydown', handleFocusLast);
+        }
       }, 100);
     }
     return () => {
       window.removeEventListener('click', handleOutsideClick);
       window.removeEventListener('keydown', handleESC);
+      const firstItem = menuRef.current?.querySelector('button');
+      if (firstItem) {
+        firstItem.removeEventListener('keydown', handleFocusLast);
+      }
     };
   }, [isMenuShow]);
 
