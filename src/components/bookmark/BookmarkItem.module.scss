@@ -24,24 +24,14 @@
 }
 
 .bookName {
-  font-size: 0.875rem;
-  color: #666;
+  font-size: 1.4rem;
+  background-color: var(--activation);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.4rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-
-  span {
-    color: #666;
-  }
-
-  a {
-    text-decoration: none;
-    color: inherit;
-
-    &:hover {
-      background: none;
-    }
-  }
+  text-decoration: none;
 }
 
 .bookmarkTitle {

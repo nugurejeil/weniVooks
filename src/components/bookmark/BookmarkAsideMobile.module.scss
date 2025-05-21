@@ -2,7 +2,13 @@
 
 .bookmarkToc {
   width: 100%;
-  padding: 0.4rem 2rem;
+  padding: 0.4rem;
+  margin-top: -5rem;
+  box-sizing: border-box;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0.4rem;
+  z-index: 100;
   margin-top: 0;
   box-sizing: border-box;
 
@@ -12,7 +18,7 @@
   background-color: var(--background);
 
   [class^='SubBanner'] {
-    margin: auto 1.6rem 1.6rem;
+    margin: 1.6rem;
   }
   &__wrap {
     position: relative;

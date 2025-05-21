@@ -2,16 +2,17 @@
 
 .wrapper {
   display: flex;
-  width: 100%;
-  flex-direction: column;
+  align-items: flex-start;
 
-  .content {
-    flex-grow: 1;
+  width: 100%;
+  margin: 0 auto;
+  flex: 1;
+  @media screen and (max-width: 1024px) {
+    display: block;
   }
 }
 .content {
-  transition: margin-left 0.2s;
-
-  display: flex;
-  align-items: flex-start;
+  flex: 1;
+  position: relative;
+  padding: 0 clamp(2rem, 3.3613445378vw, 4rem);
 }

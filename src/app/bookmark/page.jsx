@@ -1,11 +1,13 @@
 'use client';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import Link from 'next/link';
+
 import styles from './bookmark.module.scss';
 import classNames from 'classnames';
+
 import SVGAlertCircle from '@/components/svg/SVGAlertCircle';
 import useWindowSize from '@/utils/useWindowSize';
 import Loading from '../loading';
+
 import BookmarkAsidePC from '@/components/bookmark/BookmarkAsidePC';
 import BookmarkAsideMobile from '@/components/bookmark/BookmarkAsideMobile';
 import bookList from '@/data/bookList.json';
@@ -170,68 +172,60 @@ export default function Bookmark() {
           bookList={Object.keys(bookmarks || {})}
         />
       ) : null}
-
-      <div className="content__wrap">
-        <main className="main">
-          <div className="main__inner">
-            <div className={classNames(styles.wrapper)}>
-              <div className={classNames(styles.innerLayout)}>
-                <div className={styles.content}>
-                  <div className={classNames(styles.title)}>
-                    <strong>북마크</strong>
-                    <span>
-                      {selectedBook === 'all'
-                        ? `전체 북마크 ${filteredBookmarks.length}건`
-                        : `${getBookTitle(selectedBook)} ${
-                            filteredBookmarks.length
-                          }건`}
-                    </span>
-                    <div className={styles.sortButtons}>
-                      <button
-                        className={classNames(styles.sortButton, {
-                          [styles.active]: sortBy === 'timestamp',
-                        })}
-                        onClick={() => handleSortChange('timestamp')}
-                      >
-                        등록순
-                      </button>
-                      <button
-                        className={classNames(styles.sortButton, {
-                          [styles.active]: sortBy === 'chapter',
-                        })}
-                        onClick={() => handleSortChange('chapter')}
-                      >
-                        챕터순
-                      </button>
-                    </div>
-                  </div>
-
-                  {filteredBookmarks.length === 0 ? (
-                    <div className={styles.notFound}>
-                      <SVGAlertCircle size={windowWidth < 640 ? 80 : 100} />
-                      <p>
-                        <span>저장된 북마크가 없습니다.</span>
-                        <span>콘텐츠를 읽는 동안 북마크를 추가해보세요.</span>
-                      </p>
-                    </div>
-                  ) : (
-                    <div className={styles.bookmarkList}>
-                      {filteredBookmarks.map((bookmark, idx) => (
-                        <BookmarkItem
-                          key={idx}
-                          bookmark={bookmark}
-                          getBookTitle={getBookTitle}
-                          createUrlHash={createUrlHash}
-                          onDelete={removeBookmark}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+      <main className={styles.main}>
+        <div className={styles.main__inner}>
+          <div className={classNames(styles.title)}>
+            <strong>
+              {selectedBook === 'all'
+                ? '전체 북마크'
+                : getBookTitle(selectedBook)}
+            </strong>
+            <span
+              className={styles.length}
+            >{`${filteredBookmarks.length}건`}</span>
           </div>
-        </main>
+          <div className={styles.sortButtons}>
+            <button
+              className={classNames(styles.sortButton, {
+                [styles.active]: sortBy === 'timestamp',
+              })}
+              onClick={() => handleSortChange('timestamp')}
+            >
+              등록순
+            </button>
+            <button
+              className={classNames(styles.sortButton, {
+                [styles.active]: sortBy === 'chapter',
+              })}
+              onClick={() => handleSortChange('chapter')}
+            >
+              챕터순
+            </button>
+          </div>
+
+          {filteredBookmarks.length === 0 ? (
+            <div className={styles.notFound}>
+              <SVGAlertCircle size={windowWidth < 640 ? 80 : 100} />
+              <p>
+                <span>저장된 북마크가 없습니다.</span>
+                <span>콘텐츠를 읽는 동안 북마크를 추가해보세요.</span>
+              </p>
+            </div>
+          ) : (
+            <div className={styles.bookmarkList}>
+              {filteredBookmarks.map((bookmark, idx) => (
+                <BookmarkItem
+                  key={idx}
+                  bookmark={bookmark}
+                  getBookTitle={getBookTitle}
+                  createUrlHash={createUrlHash}
+                  onDelete={removeBookmark}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
         {windowWidth > 1024 && hasBookmark ? (
           <BookmarkAsidePC
             onFilterChange={handleFilterChange}
@@ -239,7 +233,7 @@ export default function Bookmark() {
             bookList={Object.keys(bookmarks || {})}
           />
         ) : null}
-      </div>
+      </main>
     </>
   );
 }

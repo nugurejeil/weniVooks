@@ -24,7 +24,7 @@ export default function BookmarkItem({
     <div className={styles.bookmarkItem}>
       <div className={styles.bookmarkInfo}>
         <Link href={`/${bookId}`} className={styles.bookName}>
-          <span>{getBookTitle(bookId)}</span>
+          {getBookTitle(bookId)}
         </Link>
         <Link href={url} className={styles.bookmarkLink}>
           <div className={styles.bookmarkTitle}>

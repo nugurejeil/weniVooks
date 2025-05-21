@@ -1,5 +1,5 @@
 @import '@/styles/function.scss';
-
+/*
 .main {
   display: flex;
   flex-direction: column;
@@ -324,4 +324,51 @@ div.notFound {
     background-color: var(--primary);
     opacity: 0.3;
   }
+}
+*/
+.main {
+  display: flex;
+  gap: 8rem;
+  padding: clamp(2rem, 6.7226890756vw, 8rem) clamp(2rem, 3.3613445378vw, 4rem)
+    clamp(8rem, 8.4033613445vw, 10rem);
+
+  &__inner {
+    width: 100%;
+    max-width: 119rem;
+  }
+
+  @media screen and (max-width: 1024px) {
+    flex-direction: column;
+  }
+}
+
+.title {
+  font-size: 2.22em;
+  border-bottom: 2px solid var(--grayLv2);
+  padding-bottom: 0.2em;
+  margin-bottom: 0.8em;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  word-break: break-all;
+
+  @media screen and (max-width: 640px) {
+    font-size: 1.8em;
+  }
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.length {
+  font-size: fcSize(18, 20);
+  color: var(--grayLv3);
+  font-weight: bold;
+}
+
+.sortButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: end;
+  margin: -1em 0 2em;
 }
