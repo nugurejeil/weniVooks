@@ -79,6 +79,11 @@ export default function Bookmark() {
     }
   }, [createUrlHash]);
 
+  // 북마크 존재 여부 체크
+  const hasBookmark = useMemo(() => {
+    return bookmarks && Object.keys(bookmarks).length > 0;
+  }, [bookmarks]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchAndSortBookmarks();
@@ -159,7 +164,7 @@ export default function Bookmark() {
 
   return (
     <>
-      {windowWidth <= 1024 ? (
+      {windowWidth <= 1024 && hasBookmark ? (
         <BookmarkAsideMobile
           onFilterChange={handleFilterChange}
           selectedBook={selectedBook}
@@ -272,7 +277,7 @@ export default function Bookmark() {
             </div>
           </div>
         </main>
-        {windowWidth > 1024 ? (
+        {windowWidth > 1024 && hasBookmark ? (
           <BookmarkAsidePC
             onFilterChange={handleFilterChange}
             selectedBook={selectedBook}

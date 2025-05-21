@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import styles from './BookmarkToc.module.scss';
+import bookList from '@/data/bookList.json';
 
 export default function BookmarkToc({
   selectedBook,
@@ -25,6 +26,12 @@ export default function BookmarkToc({
     });
   }, [bookmarks]);
 
+  // bookList에서 책 제목 가져오기
+  const getBookTitle = (bookId) => {
+    const book = bookList.find((book) => book.booklink === `/${bookId}`);
+    return book ? book.title : bookId.replace(/-/g, ' ');
+  };
+
   return (
     <ul className={styles.bookList}>
       <li>
@@ -45,7 +52,7 @@ export default function BookmarkToc({
             })}
             onClick={() => handleBookSelect(book)}
           >
-            {book.replace(/-/g, ' ')}
+            {getBookTitle(book)}
           </button>
         </li>
       ))}

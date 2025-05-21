@@ -7,14 +7,17 @@
   box-sizing: border-box;
 
   position: sticky;
-  top: 0.4rem;
+  top: 6.4rem;
   z-index: 100;
+  background-color: var(--background);
 
   [class^='SubBanner'] {
     margin: auto 1.6rem 1.6rem;
   }
   &__wrap {
     position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
 
     a:focus {
       position: relative;
@@ -125,13 +128,15 @@
 .positionWrap {
   position: absolute;
   top: 4rem;
-
+  left: 0;
+  right: 0;
   z-index: 100;
   width: 100%;
   background-color: var(--background);
-
   border: 1px solid var(--grayLv2);
   border-width: 0 1px 1px 1px;
   border-radius: 0 0 1rem 1rem;
   box-sizing: border-box;
+  max-width: 1200px;
+  margin: 0 auto;
 }
