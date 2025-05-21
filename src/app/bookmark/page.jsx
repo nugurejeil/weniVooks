@@ -9,6 +9,7 @@ import Loading from '../loading';
 import BookmarkAsidePC from '@/components/bookmark/BookmarkAsidePC';
 import BookmarkAsideMobile from '@/components/bookmark/BookmarkAsideMobile';
 import bookList from '@/data/bookList.json';
+import BookmarkItem from '@/components/bookmark/BookmarkItem';
 
 export default function Bookmark() {
   const [bookmarks, setBookmarks] = useState(null);
@@ -43,9 +44,7 @@ export default function Bookmark() {
           Object.entries(chapters).forEach(([chapter, sections]) => {
             Object.entries(sections).forEach(([section, headings]) => {
               const chapterNum = chapter.match(/\d+/);
-              const chapterDisplay = chapterNum
-                ? `Chapter ${chapterNum[0]}`
-                : chapter;
+              const chapterDisplay = chapter; // 원본 챕터 형식 유지
 
               headings.forEach((headingData) => {
                 flattenedBookmarks.push({
@@ -55,7 +54,7 @@ export default function Bookmark() {
                   chapter: chapterDisplay,
                   chapterNum: chapterNum ? parseInt(chapterNum[0]) : 0,
                   section: section,
-                  url: `/${bookId}/${chapter}#${createUrlHash(
+                  url: `/${bookId}/${chapter}/${section}#${createUrlHash(
                     headingData.title,
                   )}`,
                   timestamp: headingData.timestamp,
@@ -218,57 +217,13 @@ export default function Bookmark() {
                   ) : (
                     <div className={styles.bookmarkList}>
                       {filteredBookmarks.map((bookmark, idx) => (
-                        <div key={idx} className={styles.resultSection}>
-                          <p className={classNames(styles.subTitle)}>
-                            {bookmark.title}
-                          </p>
-                          <ol className={styles.breadcrumb}>
-                            <li>
-                              <Link href={`/${bookmark.bookId}`}>
-                                {getBookTitle(bookmark.bookId)}
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                href={`/${bookmark.bookId}/${bookmark.chapter}`}
-                              >
-                                {bookmark.chapter}
-                              </Link>
-                            </li>
-                            {bookmark.section && (
-                              <li>
-                                <Link
-                                  href={`/${bookmark.bookId}/${
-                                    bookmark.chapter
-                                  }#${createUrlHash(bookmark.title)}`}
-                                >
-                                  {bookmark.section}
-                                </Link>
-                              </li>
-                            )}
-                          </ol>
-                          <time
-                            className={styles.timestamp}
-                            dateTime={bookmark.timestamp}
-                          >
-                            {new Date(bookmark.timestamp).toLocaleString(
-                              'ko-KR',
-                              {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              },
-                            )}
-                          </time>
-                          <button
-                            className={styles.btnDelete}
-                            onClick={() => removeBookmark(bookmark.id)}
-                          >
-                            삭제
-                          </button>
-                        </div>
+                        <BookmarkItem
+                          key={idx}
+                          bookmark={bookmark}
+                          getBookTitle={getBookTitle}
+                          createUrlHash={createUrlHash}
+                          onDelete={removeBookmark}
+                        />
                       ))}
                     </div>
                   )}

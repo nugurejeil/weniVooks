@@ -1,0 +1,78 @@
+.bookmarkItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.bookmarkLink {
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+  background: none;
+
+  &:hover {
+    background: none;
+  }
+}
+
+.bookmarkInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bookName {
+  font-size: 0.875rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  span {
+    color: #666;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      background: none;
+    }
+  }
+}
+
+.bookmarkTitle {
+  strong {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    line-height: 1.4;
+  }
+}
+
+.bookmarkMeta {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.chapterInfo {
+  color: #888;
+}
+
+.deleteButton {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: none;
+  }
+}

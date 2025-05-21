@@ -38,40 +38,35 @@ export function useHeadingBookmark() {
         bookmarks[book][chapter] = {};
       }
 
-      // pathname에서 챕터 번호 추출 (예: 02)
-      const chapterNum = chapter.match(/chapter(\d+)/)?.[1];
-      // 섹션 번호 생성 (예: 02-1)
-      const currentSection = chapterNum ? `${chapterNum}-1` : chapter;
-
-      if (!bookmarks[book][chapter][currentSection]) {
-        bookmarks[book][chapter][currentSection] = [];
+      if (!bookmarks[book][chapter][section]) {
+        bookmarks[book][chapter][section] = [];
       }
 
       if (isBookmarked) {
         // 해당 섹션의 소제목 리스트에 추가
-        const existingBookmark = bookmarks[book][chapter][currentSection].find(
+        const existingBookmark = bookmarks[book][chapter][section].find(
           (item) => item.title === heading,
         );
 
         if (!existingBookmark) {
-          bookmarks[book][chapter][currentSection].push({
+          bookmarks[book][chapter][section].push({
             title: heading,
             timestamp: new Date().toISOString(),
           });
         }
       } else {
         // 해당 섹션의 소제목 리스트에서 제거
-        const headingIndex = bookmarks[book][chapter][currentSection].findIndex(
+        const headingIndex = bookmarks[book][chapter][section].findIndex(
           (item) => item.title === heading,
         );
 
         if (headingIndex !== -1) {
-          bookmarks[book][chapter][currentSection].splice(headingIndex, 1);
+          bookmarks[book][chapter][section].splice(headingIndex, 1);
         }
 
         // Clean up empty arrays and objects
-        if (bookmarks[book][chapter][currentSection].length === 0) {
-          delete bookmarks[book][chapter][currentSection];
+        if (bookmarks[book][chapter][section].length === 0) {
+          delete bookmarks[book][chapter][section];
         }
         if (Object.keys(bookmarks[book][chapter]).length === 0) {
           delete bookmarks[book][chapter];
@@ -87,11 +82,8 @@ export function useHeadingBookmark() {
     // Check if a heading is bookmarked
     const isBookmarked = (book, chapter, heading) => {
       const bookmarks = getBookmarks();
-      const chapterNum = chapter.match(/chapter(\d+)/)?.[1];
-      const currentSection = chapterNum ? `${chapterNum}-1` : chapter;
-
       return (
-        bookmarks[book]?.[chapter]?.[currentSection]?.some(
+        bookmarks[book]?.[chapter]?.[section]?.some(
           (item) => item.title === heading,
         ) || false
       );
@@ -153,30 +145,23 @@ export function useHeadingBookmark() {
       // Create React root and render BookmarkIcon
       const root = createRoot(iconContainer);
       root.render(<BookmarkIcon isFilled={bookmarked} />);
+
       bookmark.appendChild(iconContainer);
+      heading.appendChild(bookmark);
 
-      // Add click event
-      bookmark.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const newState = !isBookmarked(book, chapter, headingText);
-        saveBookmark(book, chapter, headingText, newState);
-
-        // Update icon and opacity
-        root.render(<BookmarkIcon isFilled={newState} />);
-        bookmark.style.opacity = newState ? '1' : '0';
+      // Toggle bookmark on click
+      bookmark.addEventListener('click', () => {
+        const newBookmarked = !isBookmarked(book, chapter, headingText);
+        saveBookmark(book, chapter, headingText, newBookmarked);
+        root.render(<BookmarkIcon isFilled={newBookmarked} />);
+        bookmark.style.opacity = newBookmarked ? '1' : '0';
       });
 
-      // Insert bookmark at the beginning of the heading
-      heading.insertBefore(bookmark, heading.firstChild);
-
-      // Show bookmark on mouseenter
+      // Show bookmark button on hover
       heading.addEventListener('mouseenter', () => {
         bookmark.style.opacity = '1';
       });
 
-      // Hide bookmark on mouseleave (only if not bookmarked)
       heading.addEventListener('mouseleave', () => {
         if (!isBookmarked(book, chapter, headingText)) {
           bookmark.style.opacity = '0';
