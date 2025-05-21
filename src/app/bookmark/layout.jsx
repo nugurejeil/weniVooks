@@ -4,7 +4,6 @@ import '@/styles/sub.scss';
 import Header from '@/components/layouts/header/Header';
 import Footer from '@/components/layouts/footer/Footer';
 import BtnTop from '@/components/common/button/BtnTop';
-import PageControl from '@/components/layouts/pagecontrol/PageControl';
 
 export default function Layout({ children }) {
   return (

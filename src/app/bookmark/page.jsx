@@ -6,8 +6,9 @@ import classNames from 'classnames';
 import SVGAlertCircle from '@/components/svg/SVGAlertCircle';
 import useWindowSize from '@/utils/useWindowSize';
 import Loading from '../loading';
-import BookmarkAsidePC from '@/components/layouts/aside/BookmarkAsidePC';
-import BookmarkAsideMobile from '@/components/layouts/aside/BookmarkAsideMobile';
+import BookmarkAsidePC from '@/components/bookmark/BookmarkAsidePC';
+import BookmarkAsideMobile from '@/components/bookmark/BookmarkAsideMobile';
+import bookList from '@/data/bookList.json';
 
 export default function Bookmark() {
   const [bookmarks, setBookmarks] = useState(null);
@@ -21,6 +22,12 @@ export default function Bookmark() {
   const createUrlHash = useCallback((text) => {
     if (!text) return '';
     return encodeURIComponent(text.toLowerCase());
+  }, []);
+
+  // 책 ID로 책 제목 찾기
+  const getBookTitle = useCallback((bookId) => {
+    const book = bookList.find((book) => book.booklink === `/${bookId}`);
+    return book ? book.title : bookId.replace(/-/g, ' ');
   }, []);
 
   // 북마크 데이터 가져오기 및 정렬
@@ -168,7 +175,13 @@ export default function Bookmark() {
                 <div className={styles.content}>
                   <div className={classNames(styles.title)}>
                     <strong>북마크</strong>
-                    <span>저장된 북마크: {filteredBookmarks.length}건</span>
+                    <span>
+                      {selectedBook === 'all'
+                        ? `전체 북마크 ${filteredBookmarks.length}건`
+                        : `${getBookTitle(selectedBook)} ${
+                            filteredBookmarks.length
+                          }건`}
+                    </span>
                     <div className={styles.sortButtons}>
                       <button
                         className={classNames(styles.sortButton, {
@@ -201,51 +214,49 @@ export default function Bookmark() {
                     <div className={styles.bookmarkList}>
                       {filteredBookmarks.map((bookmark, idx) => (
                         <div key={idx} className={styles.resultSection}>
-                          <Link href={bookmark.url}>
-                            <p className={classNames(styles.subTitle)}>
-                              {bookmark.title}
-                            </p>
-                            <ol className={styles.breadcrumb}>
-                              <li>
-                                <Link href={`/${bookmark.bookId}`}>
-                                  {bookmark.bookId.replace(/-/g, ' ')}
-                                </Link>
-                              </li>
+                          <p className={classNames(styles.subTitle)}>
+                            {bookmark.title}
+                          </p>
+                          <ol className={styles.breadcrumb}>
+                            <li>
+                              <Link href={`/${bookmark.bookId}`}>
+                                {getBookTitle(bookmark.bookId)}
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                href={`/${bookmark.bookId}/${bookmark.chapter}`}
+                              >
+                                {bookmark.chapter}
+                              </Link>
+                            </li>
+                            {bookmark.section && (
                               <li>
                                 <Link
-                                  href={`/${bookmark.bookId}/${bookmark.chapter}`}
+                                  href={`/${bookmark.bookId}/${
+                                    bookmark.chapter
+                                  }#${createUrlHash(bookmark.title)}`}
                                 >
-                                  {bookmark.chapter}
+                                  {bookmark.section}
                                 </Link>
                               </li>
-                              {bookmark.section && (
-                                <li>
-                                  <Link
-                                    href={`/${bookmark.bookId}/${
-                                      bookmark.chapter
-                                    }#${createUrlHash(bookmark.title)}`}
-                                  >
-                                    {bookmark.section}
-                                  </Link>
-                                </li>
-                              )}
-                            </ol>
-                            <time
-                              className={styles.timestamp}
-                              dateTime={bookmark.timestamp}
-                            >
-                              {new Date(bookmark.timestamp).toLocaleString(
-                                'ko-KR',
-                                {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                },
-                              )}
-                            </time>
-                          </Link>
+                            )}
+                          </ol>
+                          <time
+                            className={styles.timestamp}
+                            dateTime={bookmark.timestamp}
+                          >
+                            {new Date(bookmark.timestamp).toLocaleString(
+                              'ko-KR',
+                              {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              },
+                            )}
+                          </time>
                           <button
                             className={styles.btnDelete}
                             onClick={() => removeBookmark(bookmark.id)}

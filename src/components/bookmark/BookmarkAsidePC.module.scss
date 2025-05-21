@@ -1,0 +1,54 @@
+@import '@/styles/var.scss';
+
+.aside {
+  position: sticky;
+  top: 15.6rem;
+  flex-shrink: 0;
+  button {
+    padding: 0;
+    svg {
+      width: 2.4rem;
+    }
+  }
+
+  .btnClose {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    width: 3.2rem;
+    height: 3.2rem;
+    svg {
+      rotate: 180deg;
+    }
+  }
+  .btnOpen {
+    width: 5rem;
+    height: 5rem;
+    box-shadow: 0 0.4rem 2rem 0 rgba(0, 0, 0, 0.04);
+  }
+
+  .sublist {
+    width: 28rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    border-radius: 1rem;
+    border: 1px solid var(--grayLv2);
+    overflow: hidden;
+    h3 {
+      flex-shrink: 0;
+      height: 5rem;
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      font-size: 1.4rem;
+    }
+
+    a:focus {
+      position: relative;
+      outline-offset: -1px;
+      z-index: 10;
+    }
+  }
+}

@@ -1,14 +1,12 @@
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-
 import styles from './BookmarkAsideMobile.module.scss';
 
 import { handleAllowScroll, handlePreventScroll } from '@/utils/handleScroll';
-
-import SubBanner from './SubBanner';
+import SubBanner from '../layouts/aside/SubBanner';
 import SVGUpArrow from '@/components/svg/SVGUpArrow';
 import SVGDownArrow from '@/components/svg/SVGDownArrow';
+import BookmarkToc from './BookmarkToc';
 
 export default function BookmarkAsideMobile({
   onFilterChange,
@@ -69,25 +67,11 @@ export default function BookmarkAsideMobile({
     }
   };
 
-  const handleBookSelect = useCallback(
-    (bookId) => {
-      setSelectedBook(bookId);
-      onFilterChange(bookId);
-      toggleMenu(); // 모바일에서는 필터 선택 후 메뉴 닫기
-    },
-    [onFilterChange],
-  );
-
-  // 북마크가 있는 책 목록 메모이제이션
-  const filteredBookList = useMemo(() => {
-    if (!bookmarks) return [];
-    return Object.keys(bookmarks).filter((bookId) => {
-      const book = bookmarks[bookId];
-      return Object.values(book).some((chapter) =>
-        Object.values(chapter).some((sections) => sections.length > 0),
-      );
-    });
-  }, [bookmarks]);
+  const handleBookSelect = (bookId) => {
+    setSelectedBook(bookId);
+    onFilterChange(bookId);
+    toggleMenu(); // 모바일에서는 필터 선택 후 메뉴 닫기
+  };
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
@@ -147,30 +131,11 @@ export default function BookmarkAsideMobile({
           <>
             <h3 className={styles.bookmarkToc__title}>북마크 필터</h3>
             <div className={styles.positionWrap}>
-              <ul className={styles.bookList}>
-                <li>
-                  <button
-                    className={classNames(styles.bookItem, {
-                      [styles.active]: selectedBook === 'all',
-                    })}
-                    onClick={() => handleBookSelect('all')}
-                  >
-                    전체보기
-                  </button>
-                </li>
-                {filteredBookList.map((book) => (
-                  <li key={book}>
-                    <button
-                      className={classNames(styles.bookItem, {
-                        [styles.active]: selectedBook === book,
-                      })}
-                      onClick={() => handleBookSelect(book)}
-                    >
-                      {book.replace(/-/g, ' ')}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <BookmarkToc
+                selectedBook={selectedBook}
+                onFilterChange={handleBookSelect}
+                bookmarks={bookmarks}
+              />
               <SubBanner />
             </div>
             <button

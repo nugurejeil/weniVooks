@@ -1,0 +1,42 @@
+.bookList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.bookItem {
+  width: 100%;
+  padding: 0.9rem 2rem !important;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: var(--grayLv4);
+  display: block;
+
+  &:hover {
+    background-color: var(--grayLv1);
+  }
+
+  &.active {
+    color: var(--primary);
+    font-weight: bold;
+    background-color: var(--activation);
+  }
+}
+
+// 태블릿/모바일에서의 패딩
+@media (max-width: 1024px) {
+  .bookItem {
+    padding: 0.9rem 4rem;
+  }
+}
+
+// PC에서의 여백
+@media (min-width: 1025px) {
+  .bookItem {
+    padding: 0.9rem 2rem;
+  }
+}
