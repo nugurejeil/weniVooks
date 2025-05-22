@@ -124,12 +124,12 @@ export default function BookmarkAsideMobile({
             type="button"
             onClick={toggleMenu}
           >
-            북마크 필터
+            책 목록
             <SVGDownArrow alt="열기" color="grayLv3" />
           </button>
         ) : (
           <>
-            <h3 className={styles.bookmarkToc__title}>북마크 필터</h3>
+            <h3 className={styles.bookmarkToc__title}> 책 목록</h3>
             <div className={styles.positionWrap}>
               <BookmarkToc
                 selectedBook={selectedBook}
@@ -146,7 +146,7 @@ export default function BookmarkAsideMobile({
               ref={lastBtn}
             >
               <SVGUpArrow color="grayLv3" />
-              <span className="a11y-hidden">북마크 필터 닫기</span>
+              <span className="a11y-hidden">책 목록 닫기</span>
             </button>
           </>
         )}

@@ -52,7 +52,7 @@ export default function BookmarkAsidePC({
   return isMenuShow ? (
     <aside className={`${styles.aside} ${styles.show}`}>
       <div className={styles.sublist}>
-        <h3>북마크 필터</h3>
+        <h3> 책 목록</h3>
         <BookmarkToc
           selectedBook={selectedBook}
           onFilterChange={handleBookSelect}
@@ -65,7 +65,7 @@ export default function BookmarkAsidePC({
           bordernone="true"
         >
           <SVGListClose color="grayLv3" />
-          <span className="a11y-hidden">북마크 필터 메뉴 접기</span>
+          <span className="a11y-hidden">책 목록 메뉴 접기</span>
         </BtnIcon>
       </div>
       <SubBanner />
@@ -74,7 +74,7 @@ export default function BookmarkAsidePC({
     <aside className={`${styles.aside} ${styles.hide}`}>
       <BtnIcon className={`${styles.btnOpen}`} onClick={toggleMenu}>
         <SVGList color="grayLv4" />
-        <span className="a11y-hidden">북마크 필터 메뉴 열기</span>
+        <span className="a11y-hidden">책 목록 메뉴 열기</span>
       </BtnIcon>
     </aside>
   );
