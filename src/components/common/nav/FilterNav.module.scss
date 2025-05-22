@@ -7,16 +7,19 @@
   gap: 8px;
   width: calc(100% - 4.8rem);
   max-width: 119rem;
-  margin: clamp(2rem, 2.9411764706vw, 3.5rem) auto 0;
+  margin: clamp(40px, 4vw, 50px) auto clamp(50px, 5vw, 60px); 
   position: relative;
   z-index: 10;
   max-width: 119rem;
+  justify-content: center;
 
   @media (max-width: 768px) {
     overflow-x: auto;
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 4px;
+    justify-content: flex-start;
+    margin: 30px auto 40px;
 
     // 스크롤바 숨기기
     &::-webkit-scrollbar {

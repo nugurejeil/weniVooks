@@ -1,23 +1,25 @@
 'use client';
 import { useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import BtnIcon from '@/components/common/button/BtnIcon';
 import styles from './BookSearchForm.module.scss';
 import SVGSearch from '@/components/svg/SVGSearch';
 
 export default function BookSearchForm() {
   const inputRef = useRef(null);
+  const router = useRouter();
 
   const handleSubmit = (event) => {
-    if (!inputRef.current.value.trim()) {
-      event.preventDefault();
+    event.preventDefault();
+    const value = inputRef.current.value.trim();
+    if (value) {
+      router.push(`/book-search?keyword=${encodeURIComponent(value)}`);
     }
   };
 
   return (
     <form
       className={styles.bookSearch}
-      action="/book-search"
-      method="GET"
       onSubmit={handleSubmit}
     >
       <label className="a11y-hidden" htmlFor="book-search">
