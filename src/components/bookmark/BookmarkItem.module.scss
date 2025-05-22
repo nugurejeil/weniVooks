@@ -1,9 +1,40 @@
+@import '@/styles/function.scss';
+
 .bookmarkItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
-  border-bottom: 1px solid #e5e5e5;
+  padding: 2rem 0.5rem;
+  border-bottom: 1px solid var(--grayLv2);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: fcSize(12, 14);
+}
+
+.breadcrumbLink {
+  color: var(--grayLv4);
+  text-decoration: none;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.4rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--activation);
+    color: var(--primary);
+  }
+}
+
+.separator {
+  color: var(--grayLv3);
+}
+
+.chapter,
+.section {
+  color: var(--grayLv4);
 }
 
 .bookmarkLink {
@@ -21,25 +52,34 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex: 1;
 }
 
 .bookName {
-  font-size: 1.4rem;
+  width: fit-content;
+  font-size: fcSize(12, 14);
   background-color: var(--activation);
   padding: 0.2rem 0.4rem;
   border-radius: 0.4rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  text-decoration: none;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--primary);
+  }
 }
 
 .bookmarkTitle {
-  strong {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    line-height: 1.4;
+  font-size: fcSize(20, 24);
+  font-weight: 600;
+  color: var(--surface);
+  line-height: 1.4;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--primary);
   }
 }
 
@@ -48,21 +88,35 @@
   gap: 0.5rem;
   font-size: 0.875rem;
   color: #666;
+  margin-top: 0.25rem;
 }
 
-.chapterInfo {
-  color: #888;
+.bookmarkActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 1rem;
+}
+
+.date {
+  color: var(--grayLv3);
+  font-size: fcSize(12, 14);
+  white-space: nowrap;
 }
 
 .deleteButton {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  background: none;
-  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
   cursor: pointer;
+  color: var(--grayLv3);
+  transition: color 0.3s ease;
 
   &:hover {
     background: none;
+    color: var(--primary);
   }
 }

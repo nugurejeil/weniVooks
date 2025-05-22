@@ -1,331 +1,5 @@
 @import '@/styles/function.scss';
-/*
-.main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  padding-top: fcSize(24, 40);
-}
 
-.bookmark__main {
-  margin-right: 30rem;
-}
-
-.main__inner {
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 20px;
-  margin: 0 auto;
-}
-
-.wrapper {
-  width: 100%;
-  min-height: 100vh;
-  background-color: var(--grayLv1);
-}
-
-.innerLayout {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  display: flex;
-  gap: 2rem;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 1rem;
-  }
-}
-
-.sidebar {
-  width: 240px;
-  flex-shrink: 0;
-  background-color: var(--white);
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
-}
-
-.sidebarTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: var(--grayLv4);
-}
-
-.bookList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.bookItem {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid red;
-  text-align: left;
-  background: none;
-  border: none;
-  border-radius: 4px;
-  color: var(--grayLv4);
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--grayLv1);
-    color: var(--primary);
-  }
-
-  &.active {
-    background-color: var(--primary);
-    color: var(--white);
-  }
-}
-
-.content {
-  flex: 1;
-  min-width: 0;
-}
-
-.title {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: fcSize(16, 20);
-  align-self: flex-start;
-  width: 100%;
-  justify-content: space-between;
-
-  strong {
-    max-width: 500px;
-    font-size: fcSize(32, 40);
-    font-weight: 700;
-    line-height: fcSize(40, 56);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  span {
-    color: var(--grayLv3);
-    font-size: fcSize(18, 24);
-    font-weight: 600;
-    line-height: fcSize(24, 32);
-    white-space: nowrap;
-  }
-
-  .sortButtons {
-    display: flex;
-    gap: 0.5rem;
-    margin-left: auto;
-
-    .sortButton {
-      padding: 0.5rem 1rem;
-      border: 1px solid var(--grayLv2);
-      border-radius: 0.25rem;
-      background: none;
-      color: var(--grayLv3);
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: var(--grayLv1);
-      }
-
-      &.active {
-        background: var(--grayLv2);
-        color: var(--grayLv4);
-        border-color: var(--grayLv2);
-      }
-    }
-  }
-}
-
-.resultSection {
-  padding: fcSize(24, 40) 0;
-  border-bottom: 2px solid var(--grayLv2);
-  position: relative;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  p.subTitle {
-    font-size: fcSize(24, 32);
-    font-weight: 700;
-    margin-bottom: 12px;
-    cursor: pointer;
-
-    span.keyword {
-      color: var(--primary);
-    }
-
-    &:hover {
-      text-decoration-line: underline;
-      text-underline-position: under;
-    }
-
-    &:hover span.keyword {
-      text-decoration-line: underline;
-      text-underline-position: under;
-    }
-  }
-
-  .timestamp {
-    display: block;
-    font-size: fcSize(14, 16);
-    color: var(--grayLv3);
-    margin-top: 8px;
-  }
-
-  p.path {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
-    margin-bottom: fcSize(20, 32);
-
-    span.keyword {
-      font-weight: 700;
-      color: var(--primary);
-    }
-  }
-
-  div.contents {
-    font-size: fcSize(16, 18);
-    font-weight: 400;
-    line-height: fcSize(28, 32);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-
-    span.keyword {
-      display: inline-block;
-      padding: 0 3px;
-      color: var(--primary);
-      font-weight: 600;
-      background-color: var(--activation);
-    }
-
-    span.contentLine {
-      overflow: hidden;
-      white-space: normal;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      word-break: keep-all;
-    }
-  }
-}
-
-.removeButton {
-  position: absolute;
-  top: fcSize(24, 40);
-  right: 0;
-  background-color: var(--grayLv2);
-  color: var(--grayLv4);
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: #f35151;
-    color: white;
-  }
-}
-
-div.notFound {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  margin-top: 200px;
-
-  p {
-    font-size: fcSize(16, 18);
-    color: var(--grayLv3);
-  }
-}
-
-@media screen and (max-width: 640px) {
-  .innerLayout {
-    margin-top: 24px;
-
-    div.searchForm {
-      height: 40px;
-      box-sizing: border-box;
-      padding: 2px;
-      margin-bottom: 40px;
-      box-sizing: border-box;
-    }
-  }
-
-  .title {
-    flex-direction: column;
-    align-items: flex-start;
-
-    strong {
-      width: 342px;
-    }
-  }
-
-  div.notFound {
-    gap: 16px;
-    margin-top: 112px;
-
-    span {
-      display: block;
-      line-height: 22px;
-      text-align: center;
-    }
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .bookmark__main {
-    margin-right: 0;
-  }
-}
-
-.bookSection {
-  border-bottom: 1px solid var(--grayLv2);
-  padding-bottom: 30px;
-
-  &:last-child {
-    border-bottom: none;
-  }
-}
-
-.bookTitle {
-  font-size: fcSize(28, 36);
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: var(--primary);
-  position: relative;
-  display: inline-block;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: var(--primary);
-    opacity: 0.3;
-  }
-}
-*/
 .main {
   display: flex;
   gap: 8rem;
@@ -368,7 +42,78 @@ div.notFound {
 
 .sortButtons {
   display: flex;
-  gap: 1rem;
   justify-content: end;
   margin: -1em 0 2em;
+  gap: 0.8rem;
+}
+
+.sortButton {
+  background: none;
+  border: none;
+  color: var(--grayLv3);
+  font-size: fcSize(14, 16);
+  font-weight: 400;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  transition: color 0.2s ease;
+  position: relative;
+
+  &:first-child::after {
+    content: '|';
+    position: absolute;
+    right: -0.4rem;
+    transform: translateX(50%);
+    font-weight: 400;
+    color: var(--grayLv3);
+  }
+
+  &:hover {
+    color: var(--textColor);
+    font-weight: 600;
+    position: relative;
+  }
+
+  &.active {
+    color: var(--textColor);
+    font-weight: 600;
+    position: relative;
+  }
+
+  @media screen and (max-width: 640px) {
+    font-size: fcSize(13, 14);
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+// 북마크 리스트 관련 스타일들...
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  text-align: center;
+  color: var(--grayLv3);
+
+  p {
+    margin-top: 2rem;
+    line-height: 1.6;
+
+    span {
+      display: block;
+      margin-bottom: 0.5rem;
+
+      &:first-child {
+        font-size: 1.2em;
+        font-weight: 600;
+        color: var(--grayLv4);
+      }
+    }
+  }
+}
+
+.bookmarkList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }

@@ -19,6 +19,7 @@ export default function Bookmark() {
   const [selectedBook, setSelectedBook] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState('timestamp'); // 'timestamp' 또는 'chapter'
+  const [toggledBookmarks, setToggledBookmarks] = useState(new Set()); // 토글된 북마크 추적
   const { windowWidth } = useWindowSize();
 
   // URL 해시 생성 함수 - 공백을 %20으로 대체
@@ -108,44 +109,149 @@ export default function Bookmark() {
         return new Date(b.timestamp) - new Date(a.timestamp);
       } else {
         // 챕터 순 정렬
-        if (selectedBook === 'all') {
-          // 전체보기에서는 책 이름으로 먼저 정렬
-          const bookCompare = a.bookId.localeCompare(b.bookId);
-          if (bookCompare !== 0) return bookCompare;
-        }
+        // 책 제목으로 먼저 정렬 (가나다순)
+        const bookTitleA = getBookTitle(a.bookId);
+        const bookTitleB = getBookTitle(b.bookId);
+        const bookCompare = bookTitleA.localeCompare(bookTitleB, 'ko');
+        if (bookCompare !== 0) return bookCompare;
+
         // 같은 책 내에서는 챕터 번호로 정렬
-        return a.chapterNum - b.chapterNum;
+        const chapterCompare = a.chapterNum - b.chapterNum;
+        if (chapterCompare !== 0) return chapterCompare;
+
+        // 같은 챕터 내에서는 section으로 정렬
+        const sectionCompare = a.section.localeCompare(b.section, 'ko');
+        if (sectionCompare !== 0) return sectionCompare;
+
+        // 같은 section 내에서는 title로 정렬
+        return a.title.localeCompare(b.title, 'ko');
       }
     });
-  }, [selectedBook, sortedBookmarks, sortBy]);
+  }, [selectedBook, sortedBookmarks, sortBy, getBookTitle]);
 
-  // 북마크 삭제 함수
+  // 북마크 토글 함수 (추가/삭제)
+  const toggleBookmark = useCallback(
+    (bookmark) => {
+      try {
+        const { bookId, chapter, section, title, timestamp } = bookmark;
+        const bookmarkId = `${bookId}/${chapter}/${title}`;
+        const storedBookmarks = localStorage.getItem('bookmarks');
+        const bookmarks = storedBookmarks ? JSON.parse(storedBookmarks) : {};
+
+        // 현재 토글 상태 확인
+        const isCurrentlyToggled = toggledBookmarks.has(bookmarkId);
+
+        if (!isCurrentlyToggled) {
+          // 북마크 삭제 (로컬스토리지에서)
+          if (bookmarks[bookId]?.[chapter]?.[section]) {
+            bookmarks[bookId][chapter][section] = bookmarks[bookId][chapter][
+              section
+            ].filter((item) => item.title !== title);
+
+            // 빈 배열이면 해당 섹션 삭제
+            if (bookmarks[bookId][chapter][section].length === 0) {
+              delete bookmarks[bookId][chapter][section];
+            }
+
+            // 빈 객체면 해당 챕터 삭제
+            if (Object.keys(bookmarks[bookId][chapter]).length === 0) {
+              delete bookmarks[bookId][chapter];
+            }
+
+            // 빈 객체면 해당 책 삭제
+            if (Object.keys(bookmarks[bookId]).length === 0) {
+              delete bookmarks[bookId];
+            }
+          }
+
+          // 토글 상태 추가
+          setToggledBookmarks((prev) => new Set([...prev, bookmarkId]));
+        } else {
+          // 북마크 다시 추가 (로컬스토리지에)
+          if (!bookmarks[bookId]) {
+            bookmarks[bookId] = {};
+          }
+          if (!bookmarks[bookId][chapter]) {
+            bookmarks[bookId][chapter] = {};
+          }
+          if (!bookmarks[bookId][chapter][section]) {
+            bookmarks[bookId][chapter][section] = [];
+          }
+
+          // 중복 체크
+          const existingBookmark = bookmarks[bookId][chapter][section].find(
+            (item) => item.title === title,
+          );
+
+          if (!existingBookmark) {
+            bookmarks[bookId][chapter][section].push({
+              title,
+              timestamp: new Date().toISOString(), // 새로운 timestamp 생성
+            });
+          }
+
+          // 토글 상태 제거
+          setToggledBookmarks((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(bookmarkId);
+            return newSet;
+          });
+        }
+
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+      } catch (error) {
+        console.error('북마크 처리 중 오류가 발생했습니다:', error);
+      }
+    },
+    [toggledBookmarks],
+  );
+
+  // 북마크 삭제 함수 (기존 함수 - 새로고침용)
   const removeBookmark = useCallback(
     (bookmarkId) => {
+      fetchAndSortBookmarks(); // 북마크 목록 새로고침
+    },
+    [fetchAndSortBookmarks],
+  );
+
+  // 북마크 추가 함수 (기존 함수)
+  const addBookmark = useCallback(
+    (bookmarkData) => {
       try {
-        const [bookTitle, chapter, ...sectionParts] = bookmarkId.split('/');
-        const section = sectionParts.join('/');
-
+        const { bookId, chapter, section, title, timestamp } = bookmarkData;
         const updatedBookmarks = { ...bookmarks };
-        if (
-          updatedBookmarks[bookTitle] &&
-          updatedBookmarks[bookTitle][chapter] &&
-          section in updatedBookmarks[bookTitle][chapter]
-        ) {
-          delete updatedBookmarks[bookTitle][chapter][section];
 
-          if (Object.keys(updatedBookmarks[bookTitle][chapter]).length === 0) {
-            delete updatedBookmarks[bookTitle][chapter];
-          }
-          if (Object.keys(updatedBookmarks[bookTitle]).length === 0) {
-            delete updatedBookmarks[bookTitle];
-          }
+        // 북마크 데이터 구조 초기화
+        if (!updatedBookmarks[bookId]) {
+          updatedBookmarks[bookId] = {};
         }
+        if (!updatedBookmarks[bookId][chapter]) {
+          updatedBookmarks[bookId][chapter] = {};
+        }
+        if (!updatedBookmarks[bookId][chapter][section]) {
+          updatedBookmarks[bookId][chapter][section] = [];
+        }
+
+        // 중복 체크
+        const existingBookmark = updatedBookmarks[bookId][chapter][
+          section
+        ].find((bookmark) => bookmark.title === title);
+
+        if (existingBookmark) {
+          throw new Error('이미 추가된 북마크입니다.');
+        }
+
+        // 북마크 추가
+        updatedBookmarks[bookId][chapter][section].push({
+          title,
+          timestamp,
+        });
 
         localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
         fetchAndSortBookmarks(); // 북마크 목록 새로고침
       } catch (error) {
-        console.error('Error removing bookmark:', error);
+        console.error('Error adding bookmark:', error);
+        throw error;
       }
     },
     [bookmarks, fetchAndSortBookmarks],
@@ -219,7 +325,10 @@ export default function Bookmark() {
                   bookmark={bookmark}
                   getBookTitle={getBookTitle}
                   createUrlHash={createUrlHash}
-                  onDelete={removeBookmark}
+                  onToggle={toggleBookmark}
+                  isToggled={toggledBookmarks.has(
+                    `${bookmark.bookId}/${bookmark.chapter}/${bookmark.title}`,
+                  )}
                 />
               ))}
             </div>
