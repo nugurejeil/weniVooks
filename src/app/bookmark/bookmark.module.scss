@@ -2,13 +2,18 @@
 
 .main {
   display: flex;
+  justify-content: space-between;
   gap: 8rem;
   padding: clamp(2rem, 6.7226890756vw, 8rem) clamp(2rem, 3.3613445378vw, 4rem)
     clamp(8rem, 8.4033613445vw, 10rem);
 
   &__inner {
     width: 100%;
+  }
+
+  & .inner__content {
     max-width: 119rem;
+    margin: auto;
   }
 
   @media screen and (max-width: 1024px) {

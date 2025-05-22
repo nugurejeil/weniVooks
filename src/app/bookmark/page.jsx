@@ -280,59 +280,61 @@ export default function Bookmark() {
       ) : null}
       <main className={styles.main}>
         <div className={styles.main__inner}>
-          <div className={classNames(styles.title)}>
-            <strong>
-              {selectedBook === 'all'
-                ? '전체 북마크'
-                : getBookTitle(selectedBook)}
-            </strong>
-            <span
-              className={styles.length}
-            >{`${filteredBookmarks.length}건`}</span>
-          </div>
-          <div className={styles.sortButtons}>
-            <button
-              className={classNames(styles.sortButton, {
-                [styles.active]: sortBy === 'timestamp',
-              })}
-              onClick={() => handleSortChange('timestamp')}
-            >
-              등록순
-            </button>
-            <button
-              className={classNames(styles.sortButton, {
-                [styles.active]: sortBy === 'chapter',
-              })}
-              onClick={() => handleSortChange('chapter')}
-            >
-              챕터순
-            </button>
-          </div>
+          <div className={styles.inner__content}>
+            <div className={classNames(styles.title)}>
+              <strong>
+                {selectedBook === 'all'
+                  ? '전체 북마크'
+                  : getBookTitle(selectedBook)}
+              </strong>
+              <span
+                className={styles.length}
+              >{`${filteredBookmarks.length}건`}</span>
+            </div>
+            <div className={styles.sortButtons}>
+              <button
+                className={classNames(styles.sortButton, {
+                  [styles.active]: sortBy === 'timestamp',
+                })}
+                onClick={() => handleSortChange('timestamp')}
+              >
+                등록순
+              </button>
+              <button
+                className={classNames(styles.sortButton, {
+                  [styles.active]: sortBy === 'chapter',
+                })}
+                onClick={() => handleSortChange('chapter')}
+              >
+                챕터순
+              </button>
+            </div>
 
-          {filteredBookmarks.length === 0 ? (
-            <div className={styles.notFound}>
-              <SVGAlertCircle size={windowWidth < 640 ? 80 : 100} />
-              <p>
-                <span>저장된 북마크가 없습니다.</span>
-                <span>콘텐츠를 읽는 동안 북마크를 추가해보세요.</span>
-              </p>
-            </div>
-          ) : (
-            <div className={styles.bookmarkList}>
-              {filteredBookmarks.map((bookmark, idx) => (
-                <BookmarkItem
-                  key={idx}
-                  bookmark={bookmark}
-                  getBookTitle={getBookTitle}
-                  createUrlHash={createUrlHash}
-                  onToggle={toggleBookmark}
-                  isToggled={toggledBookmarks.has(
-                    `${bookmark.bookId}/${bookmark.chapter}/${bookmark.title}`,
-                  )}
-                />
-              ))}
-            </div>
-          )}
+            {filteredBookmarks.length === 0 ? (
+              <div className={styles.notFound}>
+                <SVGAlertCircle size={windowWidth < 640 ? 80 : 100} />
+                <p>
+                  <span>저장된 북마크가 없습니다.</span>
+                  <span>콘텐츠를 읽는 동안 북마크를 추가해보세요.</span>
+                </p>
+              </div>
+            ) : (
+              <div className={styles.bookmarkList}>
+                {filteredBookmarks.map((bookmark, idx) => (
+                  <BookmarkItem
+                    key={idx}
+                    bookmark={bookmark}
+                    getBookTitle={getBookTitle}
+                    createUrlHash={createUrlHash}
+                    onToggle={toggleBookmark}
+                    isToggled={toggledBookmarks.has(
+                      `${bookmark.bookId}/${bookmark.chapter}/${bookmark.title}`,
+                    )}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {windowWidth > 1024 && hasBookmark ? (
