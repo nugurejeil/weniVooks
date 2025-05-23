@@ -1,20 +1,29 @@
 'use client';
-import { useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import BtnIcon from '@/components/common/button/BtnIcon';
 import styles from './BookSearchForm.module.scss';
 import SVGSearch from '@/components/svg/SVGSearch';
 
-export default function BookSearchForm() {
-  const inputRef = useRef(null);
-  const router = useRouter();
+export default function BookSearchForm({ onSearchChange }) {
+  const [searchValue, setSearchValue] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const value = inputRef.current.value.trim();
-    if (value) {
-      router.push(`/book-search?keyword=${encodeURIComponent(value)}`);
-    }
+  // 디바운스를 위한 useEffect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearchChange(searchValue);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchValue, onSearchChange]);
+
+  const handleInputChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // 폼 제출 시에도 즉시 검색 실행
+    onSearchChange(searchValue);
   };
 
   return (
@@ -29,8 +38,9 @@ export default function BookSearchForm() {
         id="book-search"
         type="search"
         placeholder="어떤 책을 찾으시나요?"
-        name="keyword"
-        ref={inputRef}
+        value={searchValue}
+        onChange={handleInputChange}
+        autoComplete="off"
       />
 
       <BtnIcon type="submit" className={styles.btnSearch} bordernone="true">
@@ -39,4 +49,4 @@ export default function BookSearchForm() {
       </BtnIcon>
     </form>
   );
-} 
+}

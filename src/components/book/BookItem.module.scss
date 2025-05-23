@@ -94,3 +94,13 @@
     min-width: 11rem;
   }
 }
+
+// 검색어 하이라이트 스타일 추가
+.highlight {
+  background: linear-gradient(120deg, #a8e6cf 0%, #88d8a3 100%);
+  color: #2d5016;
+  font-weight: 700;
+  padding: 2px 4px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

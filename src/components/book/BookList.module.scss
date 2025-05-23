@@ -14,3 +14,59 @@
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
+// 검색 정보 표시
+.searchInfo {
+  width: calc(100% - ($padding * 2));
+  max-width: $maxWidth;
+  margin: 0 auto fcSize(16, 24);
+  
+  display: flex;
+  align-items: center;
+  gap: fcSize(8, 12);
+  padding: fcSize(12, 16) 0;
+  border-bottom: 1px solid var(--grayLv1);
+  
+  .searchTerm {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: fcSize(16, 18);
+  }
+  
+  .resultCount {
+    font-size: fcSize(13, 14);
+    color: var(--grayLv4);
+  }
+  
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: fcSize(4, 6);
+  }
+}
+
+// 검색 결과 없음
+.noResults {
+  width: calc(100% - ($padding * 2));
+  max-width: $maxWidth;
+  margin: fcSize(40, 60) auto;
+  
+  text-align: center;
+  color: var(--grayLv4);
+  
+  p {
+    margin: fcSize(6, 8) 0;
+    font-size: fcSize(14, 16);
+    line-height: 1.5;
+    
+    &:first-child {
+      font-weight: 600;
+      font-size: fcSize(16, 18);
+      color: var(--surface);
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    margin: fcSize(30, 40) auto;
+  }
+}

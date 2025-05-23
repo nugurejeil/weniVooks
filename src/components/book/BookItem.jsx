@@ -5,7 +5,24 @@ import Btn from '../common/button/Btn';
 import styles from './BookItem.module.scss';
 import handleAnalyticsClick from '@/utils/handleAnalyticsClick';
 
-export default function BookItem({ data }) {
+// 검색키워드와 일치하는 문자열 하이라이팅
+function highlightKeyword(text, keyword) {
+  if (!text || !keyword || !keyword.trim()) return text;
+
+  const regExp = new RegExp(`(${keyword})`, 'gi');
+  return text.split(regExp).map((part, idx) => {
+    if (part.toLowerCase() === keyword.toLowerCase()) {
+      return (
+        <span className={styles.highlight} key={idx}>
+          {part}
+        </span>
+      );
+    }
+    return part;
+  });
+}
+
+export default function BookItem({ data, searchQuery = '' }) {
   const {
     thumbnail,
     type,
@@ -28,8 +45,14 @@ export default function BookItem({ data }) {
           주식회사 위니브 <wbr />| 출판사: {publisher}
         </p>
         <div className={styles.titleWrap}>
-          <h3 className={styles.title}>{title}</h3>
-          {subtitle && <h4 className={styles.subtitle}>{subtitle}</h4>}
+          <h3 className={styles.title}>
+            {highlightKeyword(title, searchQuery)}
+          </h3>
+          {subtitle && (
+            <h4 className={styles.subtitle}>
+              {highlightKeyword(subtitle, searchQuery)}
+            </h4>
+          )}
         </div>
         {price && (
           <p className={styles.price}>

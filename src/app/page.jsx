@@ -11,6 +11,7 @@ import BookSearchForm from '@/components/search/BookSearchForm';
 
 export default function Home() {
   const [selectedFilter, setSelectedFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   // 필터 옵션 정의
   const filterOptions = [
@@ -25,20 +26,27 @@ export default function Home() {
     setSelectedFilter(option.value);
   };
 
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+  }
+
   return (
     <>
       <Header type="intro" />
       <div className="layout-grow">
         <Banner />
         <div className="max-w-[1200px] mx-auto px-5">
-          <BookSearchForm />
+          <BookSearchForm onSearchChange={handleSearchChange} />
           <FilterNav
             options={filterOptions}
             selectedValue={selectedFilter}
             onSelect={handleFilterChange}
           />
         </div>
-        <BookList selectedFilter={selectedFilter}/>
+        <BookList 
+          selectedFilter={selectedFilter}
+          searchQuery={searchQuery}
+        />
       </div>
       <Footer intro={true} />
       <BtnTop />
