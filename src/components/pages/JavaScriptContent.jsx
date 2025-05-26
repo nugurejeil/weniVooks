@@ -41,8 +41,8 @@ export default function JavaScriptContent({
     <>
       {htmlContent && (
         <>
-          <h3 className="title">{title}</h3>{' '}
           <ButtonGroup title={title} markdownContent={markdownContent} />
+          <h3 className="title">{title}</h3>
           <div
             dangerouslySetInnerHTML={{
               __html: replaceCodeWithJsRepl(htmlContent),
