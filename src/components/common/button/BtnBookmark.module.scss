@@ -1,0 +1,15 @@
+.standard {
+  position: relative;
+}
+.bookmarkLink {
+  width: 4rem;
+  border: none;
+
+  position: relative;
+  color: var(--grayLv4);
+
+  svg {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}

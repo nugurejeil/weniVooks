@@ -30,6 +30,7 @@
     display: flex;
     margin-right: 2rem;
     gap: 1.6rem;
+    align-items: center;
 
     @media screen and (max-width: 1024px) {
       gap: 0.4rem;
@@ -38,6 +39,11 @@
     button,
     a {
       width: 4rem;
+    }
+
+    &__btns {
+      display: flex;
+      gap: 0.8rem;
     }
   }
 

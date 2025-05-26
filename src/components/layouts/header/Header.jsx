@@ -13,6 +13,7 @@ import BtnIcon from '@/components/common/button/BtnIcon';
 import SVGSearch from '@/components/svg/SVGSearch';
 import SearchForm from '@/components/search/SearchForm';
 import ScrollBar from './ScrollBar';
+import BtnBookmark from '@/components/common/button/BtnBookmark';
 
 export default function Header({ type = 'subpage' }) {
   const { windowWidth } = useWindowSize();
@@ -30,7 +31,11 @@ export default function Header({ type = 'subpage' }) {
         {/* 설정 및 검색 */}
         {type !== 'notfound' && (
           <div className={styles.header__right}>
-            <SettingBtn />
+            <div className={styles.header__right__btns}>
+              <BtnBookmark />
+              <SettingBtn />
+            </div>
+
             {windowWidth > 640 ? (
               <SearchForm />
             ) : (
