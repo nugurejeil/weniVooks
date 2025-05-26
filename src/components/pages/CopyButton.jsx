@@ -151,10 +151,13 @@ const convertCustomMarkdown = (customMarkdown) => {
   return convertedMarkdown;
 };
 
-export default function CopyButton({ markdownContent }) {
+export default function CopyButton({ title, markdownContent }) {
   const handleCopy = async () => {
     try {
-      const convertedMarkdown = convertCustomMarkdown(markdownContent);
+      const convertedMarkdown = convertCustomMarkdown({
+        title,
+        markdownContent,
+      });
       await navigator.clipboard.writeText(convertedMarkdown);
       alert('마크다운이 클립보드에 복사되었습니다.');
     } catch (err) {
@@ -170,7 +173,9 @@ export default function CopyButton({ markdownContent }) {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'content.md';
+      const pathname = window.location.pathname;
+      const chapterName = pathname.split('/').pop();
+      link.download = `${chapterName}.${title}.md`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
