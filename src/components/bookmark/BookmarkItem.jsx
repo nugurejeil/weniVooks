@@ -29,6 +29,9 @@ export default function BookmarkItem({
   // 토글된 상태에 따라 북마크 아이콘 상태 결정
   const isBookmarked = !isToggled;
 
+  // 헤딩 ID를 포함한 URL 생성
+  const headingUrl = url.includes('#') ? url : `${url}#${title}`;
+
   return (
     <div className={styles.bookmarkItem}>
       <div className={styles.bookmarkInfo}>
@@ -51,7 +54,7 @@ export default function BookmarkItem({
             {section}
           </Link>
         </div>
-        <Link href={url} className={styles.bookmarkLink}>
+        <Link href={headingUrl} className={styles.bookmarkLink}>
           <div className={styles.bookmarkTitle}>{title}</div>
         </Link>
       </div>

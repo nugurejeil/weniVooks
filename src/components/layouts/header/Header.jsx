@@ -31,11 +31,6 @@ export default function Header({ type = 'subpage' }) {
         {/* 설정 및 검색 */}
         {type !== 'notfound' && (
           <div className={styles.header__right}>
-            <div className={styles.header__right__btns}>
-              <BtnBookmark />
-              <SettingBtn />
-            </div>
-
             {windowWidth > 640 ? (
               <SearchForm />
             ) : (
@@ -48,6 +43,10 @@ export default function Header({ type = 'subpage' }) {
                 <span className="a11y-hidden">검색</span>
               </BtnIcon>
             )}
+            <div className={styles.header__right__btns}>
+              <SettingBtn />
+              <BtnBookmark />
+            </div>
           </div>
         )}
       </header>
