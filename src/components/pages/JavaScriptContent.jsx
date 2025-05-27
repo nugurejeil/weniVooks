@@ -44,6 +44,7 @@ export default function JavaScriptContent({
           <ButtonGroup title={title} markdownContent={markdownContent} />
           <h3 className="title">{title}</h3>
           <div
+            className="content-container"
             dangerouslySetInnerHTML={{
               __html: replaceCodeWithJsRepl(htmlContent),
             }}

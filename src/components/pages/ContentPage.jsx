@@ -25,7 +25,10 @@ export default async function ContentPage({
             <ButtonGroup title={title} markdownContent={markdownContent} />
             <h3 className="title">{title}</h3>
           </div>
-          <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+          <div
+            className="content-container"
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
+          />
         </>
       );
     } else if (EDITOR.includes('Python')) {
@@ -36,6 +39,7 @@ export default async function ContentPage({
             <h3 className="title">{title}</h3>
           </div>
           <div
+            className="content-container"
             dangerouslySetInnerHTML={{
               __html: replaceCodeWithPyRepl(htmlContent),
             }}

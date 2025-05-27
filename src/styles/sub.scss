@@ -48,6 +48,12 @@ $titleGap: 8rem;
     width: 100%;
     margin: auto;
   }
+
+  //main__inner 안에 div.title_container의 다음 div의 첫번째 자식요소에 margin-top 4rem
+  &__inner > div:first-child + div > *:fist-child {
+    margin-top: 4rem;
+    border: 1px solid red;
+  }
 }
 
 // contents
@@ -58,14 +64,10 @@ $titleGap: 8rem;
   // 제목
   .title-container {
     position: relative;
-<<<<<<< HEAD
     display: flex;
     flex-direction: column-reverse;
     align-items: flex-end;
     gap: 0.5rem;
-=======
-    margin-bottom: 0.8em;
->>>>>>> e64193c9b5418a1097f28c01c3be40880ffdf7f7
   }
 
   .title {
@@ -75,18 +77,18 @@ $titleGap: 8rem;
     line-height: 1.4;
     letter-spacing: -0.02em;
     word-break: break-all;
-<<<<<<< HEAD
     width: 100%;
     padding-right: 0;
     order: 1;
-=======
-    padding-right: 12rem;
->>>>>>> e64193c9b5418a1097f28c01c3be40880ffdf7f7
 
     @media screen and (max-width: 640px) {
       font-size: 1.8em;
       padding-right: 8rem;
     }
+  }
+
+  .content-container > *:first-child {
+    margin-top: 4rem;
   }
 
   h4 {

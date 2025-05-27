@@ -386,17 +386,12 @@ a.btn-solid {
 .button-group {
   display: flex;
   gap: 0.4rem;
-<<<<<<< HEAD
   //   position: absolute;
   //   right: 0;
   //   bottom: 0.4em;
   // }
-=======
-  position: absolute;
-  right: 0;
-  bottom: 0.4em;
->>>>>>> e64193c9b5418a1097f28c01c3be40880ffdf7f7
 }
+
 .button-group button {
   border-radius: 0.5em;
   background-color: var(--background);
