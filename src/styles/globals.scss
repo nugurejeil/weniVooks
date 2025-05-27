@@ -386,17 +386,11 @@ a.btn-solid {
 .button-group {
   display: flex;
   gap: 0.4rem;
-  justify-content: flex-end;
-  float: right;
-  margin-top: 0.6em;
+  position: absolute;
+  right: 0;
+  bottom: 0.4em;
 }
-.print-button,
-.copy-button,
-.repo-button,
-.download-button {
-  padding: 0.48rem;
-  align-items: center;
-  justify-content: center;
+.button-group button {
   border-radius: 0.5em;
   background-color: var(--background);
   color: var(--grayLv3);
@@ -409,6 +403,7 @@ a.btn-solid {
   }
 
   svg {
+    padding: 0.48rem;
     width: 24px;
     height: 24px;
   }
