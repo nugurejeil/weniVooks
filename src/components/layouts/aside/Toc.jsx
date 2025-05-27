@@ -45,6 +45,23 @@ export default function Toc({ toggleMenu }) {
   const [currentId, setCurrentId] = useState('');
   const [headingEls, setHeadingEls] = useState([]);
 
+  // 페이지 로드 시 해시값에 해당하는 요소로 스크롤
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      // # 기호 제거
+      const id = hash.substring(1);
+      const element = document.getElementById(id);
+      if (element) {
+        // 약간의 지연을 주어 DOM이 완전히 로드된 후 스크롤
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+          setCurrentId(id);
+        }, 100);
+      }
+    }
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
+
   useEffect(() => {
     const observer = getIntersectionObserver(setCurrentId);
     const headingElements = Array.from(document.querySelectorAll('h4, h5, h6'));
