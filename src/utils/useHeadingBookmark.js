@@ -99,14 +99,12 @@ export function useHeadingBookmark() {
 
       // Insert wrapper for position
       heading.style.position = 'relative';
-      heading.style.display = 'flex';
-      heading.style.alignItems = 'center';
 
       // Create bookmark button
       const bookmark = document.createElement('button');
       bookmark.style.cssText = `
         position:absolute;
-        top: calc(8rem + 0.8ex); 
+        top: Calc(4rem + 0.8ex);
         left: -24px;
         cursor: pointer;
         width: 20px;
