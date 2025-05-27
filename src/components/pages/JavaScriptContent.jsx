@@ -41,8 +41,10 @@ export default function JavaScriptContent({
     <>
       {htmlContent && (
         <>
-          <ButtonGroup title={title} markdownContent={markdownContent} />
-          <h3 className="title">{title}</h3>
+          <div className="title-container">
+            <ButtonGroup title={title} markdownContent={markdownContent} />
+            <h3 className="title">{title}</h3>
+          </div>
           <div
             className="content-container"
             dangerouslySetInnerHTML={{

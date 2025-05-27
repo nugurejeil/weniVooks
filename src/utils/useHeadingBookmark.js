@@ -104,7 +104,7 @@ export function useHeadingBookmark() {
       const bookmark = document.createElement('button');
       bookmark.style.cssText = `
         position:absolute;
-        top: Calc(4rem + 0.8ex);
+        bottom: 1ex;
         left: -24px;
         cursor: pointer;
         width: 20px;

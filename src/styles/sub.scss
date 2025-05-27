@@ -48,12 +48,6 @@ $titleGap: 8rem;
     width: 100%;
     margin: auto;
   }
-
-  //main__inner 안에 div.title_container의 다음 div의 첫번째 자식요소에 margin-top 4rem
-  &__inner > div:first-child + div > *:fist-child {
-    margin-top: 4rem;
-    border: 1px solid red;
-  }
 }
 
 // contents
@@ -61,19 +55,16 @@ $titleGap: 8rem;
   font-size: 1.125em;
   line-height: 1.8;
 
-  // 제목
-  .title-container {
-    position: relative;
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: flex-end;
-    gap: 0.5rem;
+  .content-container > *:first-child {
+    margin-top: 2rem;
   }
 
+  // 제목
   .title {
     font-size: 2.22em;
     border-bottom: 2px solid var(--grayLv2);
-    padding-bottom: 0.4em;
+    padding-bottom: 0.2em;
+    margin-bottom: 0.8em;
     line-height: 1.4;
     letter-spacing: -0.02em;
     word-break: break-all;
@@ -81,13 +72,17 @@ $titleGap: 8rem;
     padding-right: 0;
     order: 1;
 
+    &-container {
+      position: relative;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+
     @media screen and (max-width: 640px) {
       font-size: 1.8em;
     }
-  }
-
-  .content-container > *:first-child {
-    margin-top: 4rem;
   }
 
   h4 {
@@ -103,9 +98,19 @@ $titleGap: 8rem;
   h4,
   h5,
   h6 {
-    padding-top: 1.6ex;
-    margin-bottom: 1rem;
+    // margin-top: -$titleGap;
+    // padding-top: $titleGap;
+    margin-bottom: 0.5em;
     position: relative;
+  }
+  h4 {
+    margin-top: 2rem;
+  }
+  h5 {
+    margin-top: 2rem;
+  }
+  h6 {
+    margin-top: 1rem;
   }
 
   ul,
@@ -118,10 +123,12 @@ $titleGap: 8rem;
     // table-layout: fixed;
     & + h4,
     & + h5 {
-      margin-top: 4rem;
+      margin-top: 2em;
+      padding-top: 0;
     }
     & + h6 {
-      margin-top: 2rem;
+      margin-top: 1.5em;
+      padding-top: 0;
     }
   }
 
@@ -388,6 +395,10 @@ $titleGap: 8rem;
 
   // 목차
   .list {
+    h4 {
+      margin-top: 0;
+      padding-top: 0;
+    }
     & > p:first-child {
       font-size: 1.2em;
     }
