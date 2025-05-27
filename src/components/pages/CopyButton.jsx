@@ -188,7 +188,7 @@ export default function CopyButton({ title, markdownContent }) {
   };
 
   return (
-    <div style={{ display: 'flex', gap: '8px' }}>
+    <>
       <Tooltip text="마크다운 복사하기">
         <button onClick={handleCopy} className="copy-button">
           <svg
@@ -232,6 +232,6 @@ export default function CopyButton({ title, markdownContent }) {
           <span className="sr-only">마크다운 다운로드</span>
         </button>
       </Tooltip>
-    </div>
+    </>
   );
 }
