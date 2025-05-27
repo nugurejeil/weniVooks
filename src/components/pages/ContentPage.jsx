@@ -21,16 +21,20 @@ export default async function ContentPage({
     if (!EDITOR || EDITOR.length === 0) {
       return (
         <>
-          <ButtonGroup title={title} markdownContent={markdownContent} />
-          <h3 className="title">{title}</h3>
+          <div className="title-container">
+            <ButtonGroup title={title} markdownContent={markdownContent} />
+            <h3 className="title">{title}</h3>
+          </div>
           <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
         </>
       );
     } else if (EDITOR.includes('Python')) {
       return (
         <>
-          <ButtonGroup title={title} markdownContent={markdownContent} />
-          <h3 className="title">{title}</h3>
+          <div className="title-container">
+            <ButtonGroup title={title} markdownContent={markdownContent} />
+            <h3 className="title">{title}</h3>
+          </div>
           <div
             dangerouslySetInnerHTML={{
               __html: replaceCodeWithPyRepl(htmlContent),
@@ -53,8 +57,10 @@ export default async function ContentPage({
     } else {
       return (
         <>
-          <ButtonGroup title={title} markdownContent={markdownContent} />
-          <h3 className="title">{title}</h3>
+          <div className="title-container">
+            <ButtonGroup title={title} markdownContent={markdownContent} />
+            <h3 className="title">{title}</h3>
+          </div>
           {replaceCodeEditor(htmlContent, EDITOR)}
         </>
       );
