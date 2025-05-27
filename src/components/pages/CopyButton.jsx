@@ -154,10 +154,7 @@ const convertCustomMarkdown = (customMarkdown) => {
 export default function CopyButton({ title, markdownContent }) {
   const handleCopy = async () => {
     try {
-      const convertedMarkdown = convertCustomMarkdown({
-        title,
-        markdownContent,
-      });
+      const convertedMarkdown = convertCustomMarkdown(markdownContent);
       await navigator.clipboard.writeText(convertedMarkdown);
       alert('마크다운이 클립보드에 복사되었습니다.');
     } catch (err) {
@@ -189,7 +186,7 @@ export default function CopyButton({ title, markdownContent }) {
 
   return (
     <>
-      <Tooltip text="마크다운 복사하기">
+      <Tooltip text="복사하기">
         <button onClick={handleCopy} className="copy-button">
           <svg
             width="40"
@@ -208,7 +205,7 @@ export default function CopyButton({ title, markdownContent }) {
         </button>
       </Tooltip>
 
-      <Tooltip text="마크다운 다운로드">
+      <Tooltip text="다운로드">
         <button onClick={handleDownload} className="download-button">
           <svg
             width="40"
