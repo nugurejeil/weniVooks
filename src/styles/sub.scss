@@ -98,19 +98,15 @@ $titleGap: 8rem;
   h4,
   h5,
   h6 {
-    // margin-top: -$titleGap;
-    // padding-top: $titleGap;
-    margin-bottom: 0.5em;
+    margin-top: clamp(2rem, 2vw, 3.2rem);
+    margin-bottom: 2rem;
     position: relative;
+    line-height: 1.2;
+    height: fit-content;
   }
-  h4 {
-    margin-top: 2rem;
-  }
-  h5 {
-    margin-top: 2rem;
-  }
-  h6 {
-    margin-top: 1rem;
+  h4 + h5,
+  h5 + h6 {
+    margin-top: clamp(1.6rem, 1.6vw, 2rem);
   }
 
   ul,
@@ -123,11 +119,10 @@ $titleGap: 8rem;
     // table-layout: fixed;
     & + h4,
     & + h5 {
-      margin-top: 2em;
-      padding-top: 0;
+      margin-top: clamp(3.2rem, 3.2vw, 4rem);
     }
     & + h6 {
-      margin-top: 1.5em;
+      margin-top: clamp(3.2rem, 3.2vw, 4rem);
       padding-top: 0;
     }
   }
