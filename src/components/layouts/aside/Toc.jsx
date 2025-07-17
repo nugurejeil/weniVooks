@@ -55,7 +55,10 @@ export default function Toc({ toggleMenu }) {
       if (element) {
         // 약간의 지연을 주어 DOM이 완전히 로드된 후 스크롤
         setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth' });
+          // 네비게이션바 높이 + 추가 여백(10px)만큼 offset 적용
+          const yOffset = -80;
+          const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
           setCurrentId(id);
         }, 100);
       }
@@ -116,9 +119,18 @@ export default function Toc({ toggleMenu }) {
             <Link
               href={`#${section.title}`}
               className={currentId === section.title ? styles.active : ''}
-              onClick={() => {
+              onClick={e => {
+                e.preventDefault();
                 toggleMenu && toggleMenu();
                 setCurrentId(section.title);
+                const element = document.getElementById(section.title);
+                if (element) {
+                  const yOffset = -80; // 네비게이션바 높이(70px) + 추가 여백(10px)
+                  const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                  window.scrollTo({ top: y, behavior: 'smooth' });
+                  // URL 해시도 변경
+                  window.history.replaceState(null, '', `#${section.title}`);
+                }
               }}
             >
               {section.title}
