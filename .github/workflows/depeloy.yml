@@ -46,7 +46,7 @@ jobs:
           script: |
             cd /opt/bitnami/apache/htdocs/weniVooks/
             git fetch --all
-            git pull origin main
+            git reset --hard origin/main
 
       - name: Build Project
         run: npm run build
