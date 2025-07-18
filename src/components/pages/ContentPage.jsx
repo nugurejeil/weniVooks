@@ -6,6 +6,7 @@ import replaceCodeEditor from '@/sub/replaceCodeEditor';
 import JavaScriptContent from './JavaScriptContent';
 import ButtonGroup from '../common/button/ButtonGroup';
 import dynamic from 'next/dynamic';
+import MermaidContentPage from './MermaidContentPage';
 
 export default async function ContentPage({
   chapter,
@@ -17,6 +18,19 @@ export default async function ContentPage({
     const { title, htmlContent, markdownContent } = await getMarkdown(
       `/${DEFAULT_PATH}/${chapter}/${page}.md`,
     );
+
+    // Mermaid 다이어그램 포함 확인
+    const hasMermaid = htmlContent.includes('mermaid-wrapper');
+    
+    if (hasMermaid) {
+      return (
+        <MermaidContentPage
+          chapter={chapter}
+          page={page}
+          DEFAULT_PATH={DEFAULT_PATH}
+        />
+      );
+    }
 
     if (!EDITOR || EDITOR.length === 0) {
       return (

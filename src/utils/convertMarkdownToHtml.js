@@ -18,6 +18,7 @@ import rehypePrettyCode from 'rehype-pretty-code';
  * - HTML 태그(<br>)를 직접 사용하여 개행 처리 가능
  * - <color=#HEX>텍스트</color> 형식으로 텍스트 색상 지정 가능
  * - <toggle>제목::내용</toggle> 형식으로 토글(접기/펼치기) 기능 사용 가능
+ * - ```mermaid 코드 블록으로 다이어그램 렌더링 가능
  */
 
 export const convertMarkdownToHtml = async (markdown) => {
@@ -40,6 +41,7 @@ export const convertMarkdownToHtml = async (markdown) => {
     .use(remarkParse) // 마크다운을 파싱
     .use(remarkDirective) // 확장구문 사용
     .use(myRemarkPlugin)
+    .use(remarkMermaid) // Mermaid 다이어그램 지원
     .use(remarkGfm) // GFM 지원(자동링크 리터럴, 각주, 취소선, 표, 작업 목록)
     .use(remarkBehead, { minDepth: 4 })
     .use(remark2rehype, {
@@ -85,6 +87,28 @@ function myRemarkPlugin() {
 
         data.hName = hast.tagName;
         data.hProperties = hast.properties;
+      }
+    });
+  };
+}
+
+// Mermaid 코드 블록을 처리하는 플러그인
+function remarkMermaid() {
+  return function (tree) {
+    visit(tree, 'code', function (node) {
+      if (node.lang === 'mermaid') {
+        const data = node.data || (node.data = {});
+        
+        // Mermaid 차트 데이터를 data attribute에 저장
+        data.hName = 'div';
+        data.hProperties = {
+          className: ['mermaid-wrapper'],
+          'data-mermaid': node.value
+        };
+        
+        // 노드 타입을 html로 변경
+        node.type = 'html';
+        node.value = `<div class="mermaid-wrapper" data-mermaid="${node.value.replace(/"/g, '&quot;')}"></div>`;
       }
     });
   };
