@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './BookmarkItem.module.scss';
 
 import BookmarkIcon from '../common/icons/BookmarkIcon';
@@ -11,11 +12,45 @@ export default function BookmarkItem({
   isToggled,
 }) {
   const { title, bookId, chapter, section, url, timestamp } = bookmark;
+  const router = useRouter();
 
   const handleBookmarkToggle = (e) => {
     e.preventDefault();
     e.stopPropagation();
     onToggle(bookmark);
+  };
+
+  const handleLinkClick = (e) => {
+    e.preventDefault();
+    const targetUrl = url.includes('#') ? url : `${url}#${encodeURIComponent(title)}`;
+    
+    // 현재 페이지와 같은 페이지인지 확인
+    const currentPath = window.location.pathname;
+    const targetPath = targetUrl.split('#')[0];
+    
+    if (currentPath === targetPath) {
+      // 같은 페이지라면 스크롤만 실행
+      const hash = targetUrl.split('#')[1];
+      if (hash) {
+        const elementId = decodeURIComponent(hash);
+        let targetElement = document.getElementById(elementId);
+        
+        if (!targetElement) {
+          targetElement = document.getElementById(hash);
+        }
+        
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          window.history.replaceState(null, null, `#${hash}`);
+        }
+      }
+    } else {
+      // 다른 페이지라면 페이지 이동
+      router.push(targetUrl);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -54,9 +89,9 @@ export default function BookmarkItem({
             {section}
           </Link>
         </div>
-        <Link href={headingUrl} className={styles.bookmarkLink}>
+        <a href={headingUrl} onClick={handleLinkClick} className={styles.bookmarkLink}>
           <div className={styles.bookmarkTitle}>{title}</div>
-        </Link>
+        </a>
       </div>
       <div className={styles.bookmarkActions}>
         <span className={styles.date}>{formatDate(timestamp)}</span>
