@@ -5,6 +5,9 @@ import { NextResponse } from 'next/server';
 
 const MD_BASE_PATH = path.join(process.cwd(), '_md');
 
+// Force dynamic rendering for API route
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/content
  * 
@@ -22,7 +25,7 @@ const MD_BASE_PATH = path.join(process.cwd(), '_md');
  */
 export async function GET(request) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = request.nextUrl;
     const book = searchParams.get('book');
     const chapter = searchParams.get('chapter');
     const page = searchParams.get('page');
