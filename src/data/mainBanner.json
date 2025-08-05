@@ -1,5 +1,20 @@
 [
   {
+    "bgColor": "#5865F2",
+    "textColor": "#fff",
+    "categoryColor": "#fff",
+    "categoryBg": "#fff",
+    "thumbnail": "/images/banner/wenivillage_780480.png",
+    "thumbnailMobile": "/images/banner/wenivillage_646400.png",
+    "category": "위니빌리지",
+    "title": ["함께 소통하고, 함께 성장할 시간", "위니빌리지 커뮤니티 OPEN !"],
+    "description": [
+      "디스코드 커뮤니티에서 개발자, 디자이너, 창업가 함께 소통해요"
+    ],
+    "buttonText": "지금 바로가기",
+    "link": "https://discord.gg/MASRTmyu8a"
+  },
+  {
     "bgColor": "#2D6BE9",
     "textColor": "#fff",
     "categoryColor": "#fff",
@@ -13,34 +28,6 @@
     ],
     "buttonText": "지금 바로가기",
     "link": "https://weniversity.co.kr/"
-  },
-  {
-    "bgColor": "linear-gradient(to bottom, #020715, #2E6FF2)",
-    "textColor": "#fff",
-    "categoryColor": "#fff",
-    "categoryBg": "#fff",
-    "thumbnail": "/images/banner/mcp_780480.png",
-    "thumbnailMobile": "/images/banner/mcp_646400.png",
-    "category": "E-BOOK 출간",
-    "title": ["전 세계가 주목한 MCP를", "가장 빠르게 소개한 단 한 권의 책"],
-    "description": [
-      "MCP 혁신: 클로드로 엑셀, 한글, 휴가 등록부터 결재문서 자동화까지 with python"
-    ],
-    "buttonText": "지금 바로가기",
-    "link": "https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000011285165"
-  },
-  {
-    "bgColor": "#0B1D16",
-    "textColor": "#fff",
-    "categoryColor": "#fff",
-    "categoryBg": "#fff",
-    "thumbnail": "/images/banner/fastapi_780480.png",
-    "thumbnailMobile": "/images/banner/fastapi_646400.png",
-    "category": "인프런 강의 출시",
-    "title": ["실무 백엔드 개발자가 알려주는,", "FastAPI 시스템 구축 강의"],
-    "description": ["FastAPI 실전편 : JWT와 Redis로 완성하는 인증 시스템"],
-    "buttonText": "지금 바로가기",
-    "link": "https://inf.run/5LR66"
   },
   {
     "bgColor": "#15BF6F",
