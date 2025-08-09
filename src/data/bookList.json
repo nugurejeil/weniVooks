@@ -286,17 +286,5 @@
     "booklink": "/basecamp-mcp",
     "classlink": null,
     "date": "2025-03-29"
-  },
-  {
-    "thumbnail": "/images/cursor-python/cover-cursor-python.png",
-    "publisher": "사도출판",
-    "title": "Cursor 톺아보기 with Python",
-    "subtitle": null,
-    "type": "전자책",
-    "price": "무료",
-    "description": "Cursor IDE와 함께 파이썬을 쉽고 재미있게! AI 협업으로 코딩을 배우며 게임 개발부터 웹 개발까지 실전 프로젝트로 학습해 보세요.",
-    "booklink": "/cursor-with-python",
-    "classlink": null,
-    "date": "2025-09-01"
   }
 ]
