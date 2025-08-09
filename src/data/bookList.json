@@ -240,6 +240,18 @@
     "date": "2024-12-16"
   },
   {
+    "thumbnail": "/images/basecamp-react/cover-react.png",
+    "publisher": "사도출판",
+    "title": "리엑트 베이스캠프",
+    "subtitle": null,
+    "type": "전자책",
+    "price": "무료",
+    "description": "리엑트의 가장 기초적인 내용만 살펴봅니다.",
+    "booklink": "/basecamp-react",
+    "classlink": null,
+    "date": "2025-08-09"
+  },
+  {
     "thumbnail": "/images/python-class/cover.png",
     "publisher": "사도출판",
     "title": "파이썬 클래스 톺아보기",
