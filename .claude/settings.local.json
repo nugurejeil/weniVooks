@@ -8,7 +8,14 @@
       "Bash(git commit:*)",
       "Bash(git config:*)",
       "Bash(mkdir:*)",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(dir:*)",
+      "Bash(sed:*)",
+      "Bash(python3:*)",
+      "Bash(move react-default-page.png chapter01-03-01-react-default.png)"
     ],
     "deny": []
   }
