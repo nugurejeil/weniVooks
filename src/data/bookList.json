@@ -286,5 +286,29 @@
     "booklink": "/basecamp-mcp",
     "classlink": null,
     "date": "2025-03-29"
+  },
+  {
+    "thumbnail": "/images/essentials-chatgpt/cover.png",
+    "publisher": "사도출판",
+    "title": "ChatGPT 에센셜",
+    "subtitle": null,
+    "type": "전자책",
+    "price": "무료",
+    "description": "ChatGPT의 기본부터 활용까지 실무에서 활용할 수 있는 내용까지 다룹니다.",
+    "booklink": "/essentials-chatgpt",
+    "classlink": null,
+    "date": "2025-10-16"
+  },
+  {
+    "thumbnail": "/images/essentials-vibecoding/cover.png",
+    "publisher": "사도출판",
+    "title": "개발자를 위한 Vibe Coding 에센셜 with claude code",
+    "subtitle": null,
+    "type": "전자책",
+    "price": "무료",
+    "description": "claude code와 함께하는 Vibe Coding 핵심 기능과 활용법.",
+    "booklink": "/essentials-vibecoding",
+    "classlink": null,
+    "date": "2025-03-29"
   }
 ]
