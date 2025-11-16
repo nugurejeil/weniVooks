@@ -310,5 +310,17 @@
     "booklink": "/essentials-vibecoding",
     "classlink": null,
     "date": "2025-03-29"
+  },
+  {
+    "thumbnail": "/images/genai-notion/cover.png",
+    "publisher": "사도출판",
+    "title": "생성형 AI와 Notion으로 배우는 디지털 전환 실무",
+    "subtitle": null,
+    "type": "전자책",
+    "price": "무료",
+    "description": "생성형 AI와 Notion으로 배우는 디지털 전환 실무.",
+    "booklink": "/genai-notion",
+    "classlink": null,
+    "date": "2025-11-17"
   }
 ]
