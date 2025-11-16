@@ -27,20 +27,23 @@ export const convertMarkdownToHtml = async (markdown) => {
   let normalizedMarkdown = markdown.replace(/\r\n/g, '\n');
 
   // <color=#HEX>텍스트</color> 태그를 <span style="color:#HEX">텍스트</span>으로 변환
+  // [\s\S]*? 를 사용하여 줄바꿈을 포함한 모든 문자 매칭
   normalizedMarkdown = normalizedMarkdown.replace(
-    /<color=(#[0-9A-Fa-f]{3,8})>(.*?)<\/color>/g,
+    /<color=(#[0-9A-Fa-f]{3,8})>([\s\S]*?)<\/color>/g,
     '<span style="color:$1">$2</span>',
   );
 
   // <highlight>텍스트</highlight> 태그를 기본 노란색 하이라이트로 변환
+  // [\s\S]*? 를 사용하여 줄바꿈을 포함한 모든 문자 매칭
   normalizedMarkdown = normalizedMarkdown.replace(
-    /<highlight>(.*?)<\/highlight>/g,
+    /<highlight>([\s\S]*?)<\/highlight>/g,
     '<span style="background-color:#ffff00; padding: 2px 4px; border-radius: 3px;">$1</span>',
   );
 
   // <highlight=#HEX>텍스트</highlight> 태그를 지정된 색상 하이라이트로 변환
+  // [\s\S]*? 를 사용하여 줄바꿈을 포함한 모든 문자 매칭
   normalizedMarkdown = normalizedMarkdown.replace(
-    /<highlight=(#[0-9A-Fa-f]{3,8})>(.*?)<\/highlight>/g,
+    /<highlight=(#[0-9A-Fa-f]{3,8})>([\s\S]*?)<\/highlight>/g,
     '<span style="background-color:$1; padding: 2px 4px; border-radius: 3px;">$2</span>',
   );
 
@@ -74,17 +77,18 @@ export const convertMarkdownToHtml = async (markdown) => {
     .process(normalizedMarkdown);
 
   // 최종 HTML에서 남아있을 수 있는 태그들 처리
+  // [\s\S]*? 를 사용하여 줄바꿈을 포함한 모든 문자 매칭
   let htmlResult = String(file)
     .replace(
-      /<color=(#[0-9A-Fa-f]{3,8})>(.*?)<\/color>/g,
+      /<color=(#[0-9A-Fa-f]{3,8})>([\s\S]*?)<\/color>/g,
       '<span style="color:$1">$2</span>',
     )
     .replace(
-      /<highlight>(.*?)<\/highlight>/g,
+      /<highlight>([\s\S]*?)<\/highlight>/g,
       '<span style="background-color:#ffff00; padding: 2px 4px; border-radius: 3px;">$1</span>',
     )
     .replace(
-      /<highlight=(#[0-9A-Fa-f]{3,8})>(.*?)<\/highlight>/g,
+      /<highlight=(#[0-9A-Fa-f]{3,8})>([\s\S]*?)<\/highlight>/g,
       '<span style="background-color:$1; padding: 2px 4px; border-radius: 3px;">$2</span>',
     )
     .replace(
