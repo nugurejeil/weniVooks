@@ -322,5 +322,17 @@
     "booklink": "/genai-notion",
     "classlink": null,
     "date": "2025-11-17"
+  },
+  {
+    "thumbnail": "/images/essentials-codingtest/cover.png",
+    "publisher": "사도출판",
+    "title": "코딩 테스트 에센셜",
+    "subtitle": null,
+    "type": "전자책",
+    "price": "무료",
+    "description": "코딩 테스트의 기본부터 활용까지 실무에서 활용할 수 있는 내용까지 다룹니다.",
+    "booklink": "/essentials-codingtest",
+    "classlink": null,
+    "date": "2025-11-19"
   }
 ]
