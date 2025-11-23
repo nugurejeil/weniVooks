@@ -16,10 +16,10 @@
     "url": "https://bootcamp.weniv.co.kr/"
   },
   {
-    "title": "지역기반 개발 스터디! 스터디인",
-    "subText": "지금 이 책! 같이 공부할 사람을 모아봐요",
-    "src": "/images/banner/banner2.png",
-    "bgColor": "rgb(46, 111, 242)",
+    "title": "위니빌리지 디스코드 커뮤니티",
+    "subText": "함께 소통하고, 함께 성장할 시간",
+    "src": "/images/banner/discord_no_bg.png",
+    "bgColor": "#5865F2",
     "textColor": "#fff",
     "url": "https://www.studyin.co.kr/"
   }

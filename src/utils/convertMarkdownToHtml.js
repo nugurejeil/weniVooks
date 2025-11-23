@@ -17,6 +17,7 @@ import rehypePrettyCode from 'rehype-pretty-code';
  * 마크다운을 HTML로 변환
  * - HTML 태그(<br>)를 직접 사용하여 개행 처리 가능
  * - <color=#HEX>텍스트</color> 형식으로 텍스트 색상 지정 가능
+ * - <highlight>텍스트</highlight> 또는 <highlight=#HEX>텍스트</highlight> 형식으로 텍스트 하이라이팅 가능
  * - <toggle>제목::내용</toggle> 형식으로 토글(접기/펼치기) 기능 사용 가능
  * - ```mermaid 코드 블록으로 다이어그램 렌더링 가능
  */
@@ -26,9 +27,24 @@ export const convertMarkdownToHtml = async (markdown) => {
   let normalizedMarkdown = markdown.replace(/\r\n/g, '\n');
 
   // <color=#HEX>텍스트</color> 태그를 <span style="color:#HEX">텍스트</span>으로 변환
+  // [\s\S]*? 를 사용하여 줄바꿈을 포함한 모든 문자 매칭
   normalizedMarkdown = normalizedMarkdown.replace(
-    /<color=(#[0-9A-Fa-f]{3,8})>(.*?)<\/color>/g,
+    /<color=(#[0-9A-Fa-f]{3,8})>([\s\S]*?)<\/color>/g,
     '<span style="color:$1">$2</span>',
+  );
+
+  // <highlight>텍스트</highlight> 태그를 기본 노란색 하이라이트로 변환
+  // [\s\S]*? 를 사용하여 줄바꿈을 포함한 모든 문자 매칭
+  normalizedMarkdown = normalizedMarkdown.replace(
+    /<highlight>([\s\S]*?)<\/highlight>/g,
+    '<span style="background-color:#ffff00; padding: 2px 4px; border-radius: 3px;">$1</span>',
+  );
+
+  // <highlight=#HEX>텍스트</highlight> 태그를 지정된 색상 하이라이트로 변환
+  // [\s\S]*? 를 사용하여 줄바꿈을 포함한 모든 문자 매칭
+  normalizedMarkdown = normalizedMarkdown.replace(
+    /<highlight=(#[0-9A-Fa-f]{3,8})>([\s\S]*?)<\/highlight>/g,
+    '<span style="background-color:$1; padding: 2px 4px; border-radius: 3px;">$2</span>',
   );
 
   // <toggle>제목::내용</toggle> 태그를 HTML details/summary 요소로 변환
@@ -60,11 +76,20 @@ export const convertMarkdownToHtml = async (markdown) => {
     }) // HTML로 변환
     .process(normalizedMarkdown);
 
-  // 최종 HTML에서 남아있을 수 있는 색상 태그와 토글 태그 처리
+  // 최종 HTML에서 남아있을 수 있는 태그들 처리
+  // [\s\S]*? 를 사용하여 줄바꿈을 포함한 모든 문자 매칭
   let htmlResult = String(file)
     .replace(
-      /<color=(#[0-9A-Fa-f]{3,8})>(.*?)<\/color>/g,
+      /<color=(#[0-9A-Fa-f]{3,8})>([\s\S]*?)<\/color>/g,
       '<span style="color:$1">$2</span>',
+    )
+    .replace(
+      /<highlight>([\s\S]*?)<\/highlight>/g,
+      '<span style="background-color:#ffff00; padding: 2px 4px; border-radius: 3px;">$1</span>',
+    )
+    .replace(
+      /<highlight=(#[0-9A-Fa-f]{3,8})>([\s\S]*?)<\/highlight>/g,
+      '<span style="background-color:$1; padding: 2px 4px; border-radius: 3px;">$2</span>',
     )
     .replace(
       /<toggle>(.*?)::([\s\S]*?)<\/toggle>/g,
@@ -98,17 +123,20 @@ function remarkMermaid() {
     visit(tree, 'code', function (node) {
       if (node.lang === 'mermaid') {
         const data = node.data || (node.data = {});
-        
+
         // Mermaid 차트 데이터를 data attribute에 저장
         data.hName = 'div';
         data.hProperties = {
           className: ['mermaid-wrapper'],
-          'data-mermaid': node.value
+          'data-mermaid': node.value,
         };
-        
+
         // 노드 타입을 html로 변경
         node.type = 'html';
-        node.value = `<div class="mermaid-wrapper" data-mermaid="${node.value.replace(/"/g, '&quot;')}"></div>`;
+        node.value = `<div class="mermaid-wrapper" data-mermaid="${node.value.replace(
+          /"/g,
+          '&quot;',
+        )}"></div>`;
       }
     });
   };
