@@ -334,5 +334,17 @@
     "booklink": "/essentials-codingtest",
     "classlink": null,
     "date": "2025-11-19"
+  },
+  {
+    "thumbnail": "/images/essentials-google-antigravity/cover.png",
+    "publisher": "사도출판",
+    "title": "Google Antigravity 에센셜",
+    "subtitle": null,
+    "type": "전자책",
+    "price": "무료",
+    "description": "구글이 발표한 최신 IDE를 활용하여 기본부터 활용, 실제 프로젝트 구현 실습 내용까지 다룹니다.",
+    "booklink": "/essentials-google-antigravity",
+    "classlink": null,
+    "date": "2025-12-01"
   }
 ]
