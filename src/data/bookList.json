@@ -324,14 +324,26 @@
     "date": "2025-11-17"
   },
   {
-    "thumbnail": "/images/essentials-codingtest/cover.png",
+    "thumbnail": "/images/essentials-py-codingtest/cover.png",
     "publisher": "사도출판",
-    "title": "코딩 테스트 에센셜",
+    "title": "코딩 테스트 에센셜 with 파이썬",
     "subtitle": null,
     "type": "전자책",
     "price": "무료",
-    "description": "코딩 테스트의 기본부터 활용까지 실무에서 활용할 수 있는 내용까지 다룹니다.",
-    "booklink": "/essentials-codingtest",
+    "description": "코딩 테스트의 기본부터 활용까지 실무에서 활용할 수 있는 자료구조와 알고리즘을 다룹니다..",
+    "booklink": "/essentials-py-codingtest",
+    "classlink": null,
+    "date": "2025-11-19"
+  },
+  {
+    "thumbnail": "/images/essentials-js-codingtest/cover.png",
+    "publisher": "사도출판",
+    "title": "코딩 테스트 에센셜 with 자바스크립트",
+    "subtitle": null,
+    "type": "전자책",
+    "price": "무료",
+    "description": "코딩 테스트의 기본부터 활용까지 실무에서 활용할 수 있는 자료구조와 알고리즘을 다룹니다.",
+    "booklink": "/essentials-js-codingtest",
     "classlink": null,
     "date": "2025-11-19"
   }
