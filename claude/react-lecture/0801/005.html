@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title></title>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script type="text/babel">
+
+    function MapElement() {
+        return <p>난 지도!</p>;
+    }
+
+    function Card() {
+        return <p>난 카드!</p>;
+    }
+
+    function Header() {
+        return <h1>난 헤더!</h1>;
+    }
+
+    function Main() {
+        return (
+            <div>
+                <MapElement />
+                <Card />
+            </div>
+        );
+    }
+
+    function Footer() {
+        return <p>난 푸터!</p>;
+    }
+    
+    const app = (
+        <div>
+            <Header/>
+            <Main/>
+            <Footer/>
+        </div>
+    );
+
+    // DOM에 리액트 컴포넌트 랜더링하기
+    const domContainer = document.querySelector('#root');
+    const root = ReactDOM.createRoot(domContainer);
+    root.render(app, domContainer);
+</script>
+</body>
+</html>

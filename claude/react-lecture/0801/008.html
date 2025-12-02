@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title></title>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script type="text/babel">
+
+    function Test1(props) {
+        console.log(props);
+        return <h1>{props.children}</h1>;
+    }
+
+    function Test2(message) {
+        console.log(message);
+        return <h2>{message}</h2>;
+    }
+
+    function f() {
+        return 'f';
+    }
+
+    function ff() {
+        return 'ff';
+    }
+
+    const login = true;
+
+    function Login() {
+        return <h2>로그인</h2>;
+    }
+
+    function Logout() {
+        return <h2>로그아웃</h2>;
+    }
+    
+    const app = (
+        <div>
+            {/* 주석입니다. */}
+            <Test1>안녕</Test1>
+            {/* 중괄호가 있으면 JavaScript 표현식이 들어갑니다. */}
+            {Test2('hello world')}
+            {1 + 2}
+            {'hello' + 'world'}
+            {true ? <h3>참</h3> : <h3>거짓</h3>}
+            {f() + ff()}
+            {login ? <Logout /> : <Login />}
+        </div>
+    );
+
+    // DOM에 리액트 컴포넌트 랜더링하기
+    const domContainer = document.querySelector('#root');
+    const root = ReactDOM.createRoot(domContainer);
+    root.render(app, domContainer);
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Shopping Mall</title>
+<link rel="stylesheet" href="style/reset.css">
+<link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script type="text/babel">
+
+    function ShoppingMall() {
+        const [products, setProducts] = React.useState([]);
+        const [loading, setLoading] = React.useState(true);
+
+        React.useEffect(() => {
+            fetch('https://dev.wenivops.co.kr/services/fastapi-crud/1/product')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    setProducts(data);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    setLoading(false);
+                });
+        }, []);
+
+        function Card({title, price, imageUrl}) {
+            return (
+                <div className="product-item">
+                    <div className="product-img">
+                        <img src={imageUrl} alt={title}/>
+                    </div>
+                    <h2 className="product-name">{title}</h2>
+                    <p className="m-price">{price.toLocaleString()}<span>원</span></p>
+                    <button className="like-btn"></button>
+                </div>
+            );
+        }
+
+        if (loading) {
+            return <div>Loading...</div>;
+        }
+
+        return (
+            <div className="product">
+                <div className="product-list">
+                    {products.map(product => (
+                        <Card 
+                            key={product.id}
+                            title={product.productName} 
+                            price={product.price} 
+                            imageUrl={product.thumbnailImg} 
+                        />
+                    ))}
+                </div>
+                <div className="link-btn cart-link"></div>
+            </div>
+        );
+    }
+
+    // DOM에 리액트 컴포넌트 랜더링하기
+    const domContainer = document.querySelector('#root');
+    const root = ReactDOM.createRoot(domContainer);
+    root.render(<ShoppingMall />);
+
+</script>
+</body>
+</html>

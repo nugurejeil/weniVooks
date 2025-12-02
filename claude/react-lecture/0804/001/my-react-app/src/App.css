@@ -1,0 +1,66 @@
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
+
+.name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.healthy {
+  color: green;
+}
+
+.moderate {
+  color: orange;
+}
+
+.critical {
+  color: red;
+}
+
+span.online {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: green;
+}
+span.offline {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: red;
+}
+
+.legend-level .level{
+  display:inline-block;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: gold;
+}
+
+.high-level .level{
+  display:inline-block;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: silver;
+}
+
+.low-level .level{
+  display:inline-block;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: gray;
+}

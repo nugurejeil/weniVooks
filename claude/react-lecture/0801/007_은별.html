@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script type="text/babel">
+      function Mapimg() {
+        return <img src="https://via.placeholder.com/300" alt="지도 이미지" />;
+      }
+
+      function Card() {
+        return (
+          <div>
+            <h2>흑돼지</h2>
+            <p>맛집에 대한 간단한 설명이 들어갑니다.</p>
+          </div>
+        );
+      }
+
+    //   내가 나를 호출하면 무한 반복이 일어납니다.
+    //   function Header() {
+    //     return <Header>제주맛집리스트</Header>;
+    //   }
+
+      function Header() {
+        return <h1>제주맛집리스트</h1>;
+      }
+
+      function Main() {
+        return (
+          <div>
+            <Mapimg />
+            <Card />
+          </div>
+        );
+      }
+
+      function Footer() {
+        return <div>푸터</div>;
+      }
+
+      const app = (
+        <div>
+          <Header/>
+          <Main/>
+          <Footer/>
+        </div>
+      );
+
+      // DOM에 리액트 컴포넌트 랜더링하기
+      const domContainer = document.querySelector("#root");
+      const root = ReactDOM.createRoot(domContainer);
+      root.render(app, domContainer);
+    </script>
+  </body>
+</html>

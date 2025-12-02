@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title></title>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script type="text/babel">
+
+    fetch('https://dev.wenivops.co.kr/services/fastapi-crud/1/product')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+            function Card(props){
+                return (
+                    <div>
+                        <h2>{props.title}</h2>
+                        <p>{props.description}</p>
+                    </div>
+                );
+            }
+
+            {/* Card 컴포넌트에 콘텐츠로 전달하는 방법 */}
+            {/* (가장 많이 사용) Card 컴포넌트에 속성으로 전달하는 방법 */}
+            {/* Card 컴포넌트를 중괄호 안에 넣어 자바스크립트처럼 사용하는 방법 */}
+            const app = (
+                <div>
+                    <Card title="상품 제목" description="상품 설명" />
+                </div>
+            );
+
+            // DOM에 리액트 컴포넌트 랜더링하기
+            const domContainer = document.querySelector('#root');
+            const root = ReactDOM.createRoot(domContainer);
+            root.render(app, domContainer);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+</script>
+</body>
+</html>

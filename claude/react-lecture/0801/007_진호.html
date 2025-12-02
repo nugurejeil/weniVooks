@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title></title>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script type="text/babel">
+
+    function TestComponent(){
+        return <p>테스트 컴포넌트</p>;
+    }
+
+    function TestComponent2(a){
+        console.log(a);
+        return <p>테스트 컴포넌트</p>;
+    }
+
+    function TestComponent3(props){
+        return <p>{props.children}</p>;
+    }
+    
+    const app = (
+        <div>
+            <TestComponent />
+            <TestComponent2>helloworld</TestComponent2>
+            <TestComponent3>안녕하세요</TestComponent3>
+        </div>
+    );
+
+    // DOM에 리액트 컴포넌트 랜더링하기
+    const domContainer = document.querySelector('#root');
+    const root = ReactDOM.createRoot(domContainer);
+    root.render(app, domContainer);
+</script>
+</body>
+</html>
