@@ -37,8 +37,14 @@ export const convertMarkdownToHtml = async (markdown) => {
   // [\s\S]*? 를 사용하여 줄바꿈을 포함한 모든 문자 매칭
   normalizedMarkdown = normalizedMarkdown.replace(
     /<highlight>([\s\S]*?)<\/highlight>/g,
-    '<span style="background-color:#ffff00; padding: 2px 4px; border-radius: 3px;">$1</span>',
+    '<span style="background-color:#f5d7fa; padding: 2px 4px; border-radius: 3px;">$1</span>',
   );
+
+  // #FFCCBC
+  // #80DEEA
+  // #E1BEE7
+  // #CE93D8
+  // #FFE0B2
 
   // <highlight=#HEX>텍스트</highlight> 태그를 지정된 색상 하이라이트로 변환
   // [\s\S]*? 를 사용하여 줄바꿈을 포함한 모든 문자 매칭
