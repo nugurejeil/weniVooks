@@ -77,6 +77,28 @@ def get_book_info(book_name):
     return info
 
 
+def safe_read_text(file_path):
+    """파일을 안전하게 읽기 (인코딩 에러 처리)"""
+    try:
+        content = file_path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        # UTF-8 실패 시 cp949 시도 후 UTF-8로 변환
+        try:
+            content = file_path.read_text(encoding="cp949")
+        except UnicodeDecodeError:
+            # 그래도 실패하면 에러 무시하고 읽기
+            content = file_path.read_bytes().decode("utf-8", errors="replace")
+
+    # non-breaking space (0xa0) 등 특수 공백을 일반 공백으로 치환
+    content = content.replace('\xa0', ' ')
+    content = content.replace('\u00a0', ' ')  # NBSP
+    content = content.replace('\u2003', ' ')  # EM SPACE
+    content = content.replace('\u2002', ' ')  # EN SPACE
+    content = content.replace('\u200b', '')   # ZERO WIDTH SPACE
+
+    return content
+
+
 def parse_frontmatter(content):
     """마크다운 파일에서 frontmatter 파싱"""
     if content.startswith("---"):
@@ -226,7 +248,7 @@ def get_chapters_and_pages(book_path):
             md_files = sorted(chapter_dir.glob("*.md"), key=lambda x: x.stem)
 
             for md_file in md_files:
-                content = md_file.read_text(encoding="utf-8")
+                content = safe_read_text(md_file)
                 frontmatter, _ = parse_frontmatter(content)
                 pages.append({
                     "file": md_file,
@@ -350,7 +372,7 @@ def generate_pdf(book_name, output_filename=None):
 
     for chapter_name, pages in chapters.items():
         for page in pages:
-            content = page['file'].read_text(encoding="utf-8")
+            content = safe_read_text(page['file'])
             frontmatter, md_content = parse_frontmatter(content)
 
             chapter_title = frontmatter.get('chapter', '')

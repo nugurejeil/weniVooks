@@ -2,24 +2,89 @@ name: Generate PDF Books
 
 on:
   schedule:
-    # 한국시간 토요일 새벽 2시 = UTC 금요일 17:00
-    # - cron: '0 17 * * 5'
     # 한국시간 일요일 새벽 2시 = UTC 토요일 17:00
     - cron: '0 17 * * 6'
   # 수동 실행도 가능
   workflow_dispatch:
     inputs:
       book_name:
-        description: '특정 책만 생성 (비우면 전체)'
+        description: '특정 책만 생성 (비우면 변경된 책만)'
         required: false
         default: ''
+      force_all:
+        description: '전체 책 강제 생성'
+        type: boolean
+        required: false
+        default: false
 
 env:
   LIGHTSAIL_HOST: ${{ secrets.LIGHTSAIL_HOST }}
   LIGHTSAIL_USERNAME: bitnami
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed_books: ${{ steps.detect.outputs.changed_books }}
+      has_changes: ${{ steps.detect.outputs.has_changes }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 전체 히스토리 가져오기 (diff 비교용)
+
+      - name: Detect changed books
+        id: detect
+        run: |
+          # 수동 실행 + 전체 강제 생성
+          if [ "${{ github.event.inputs.force_all }}" == "true" ]; then
+            echo "🔄 Force all: 전체 책 생성"
+            BOOKS=$(ls -d _md/*/ 2>/dev/null | xargs -n1 basename | grep -v '^\.' | tr '\n' ' ')
+            echo "changed_books=$BOOKS" >> $GITHUB_OUTPUT
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # 수동 실행 + 특정 책 지정
+          if [ -n "${{ github.event.inputs.book_name }}" ]; then
+            echo "📚 특정 책 지정: ${{ github.event.inputs.book_name }}"
+            echo "changed_books=${{ github.event.inputs.book_name }}" >> $GITHUB_OUTPUT
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # 스케줄 실행 또는 수동 실행 (변경 감지)
+          echo "🔍 변경된 책 감지 중..."
+
+          # 마지막 성공한 워크플로우 이후 변경 감지 (없으면 최근 7일)
+          SINCE_DATE=$(date -d '7 days ago' '+%Y-%m-%d')
+
+          # _md 폴더에서 변경된 파일 감지
+          CHANGED_FILES=$(git diff --name-only HEAD~50 HEAD -- '_md/' 2>/dev/null || git diff --name-only HEAD -- '_md/')
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "변경된 파일 없음"
+            echo "changed_books=" >> $GITHUB_OUTPUT
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # 변경된 책 이름 추출 (중복 제거)
+          CHANGED_BOOKS=$(echo "$CHANGED_FILES" | grep '^_md/' | cut -d'/' -f2 | sort -u | tr '\n' ' ')
+
+          echo "변경된 책: $CHANGED_BOOKS"
+          echo "changed_books=$CHANGED_BOOKS" >> $GITHUB_OUTPUT
+
+          if [ -n "$CHANGED_BOOKS" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
   generate-pdf:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -30,6 +95,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      # Python 의존성 캐싱
+      - name: Cache Python dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('pdf_export/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       # WeasyPrint 시스템 의존성 설치
       - name: Install system dependencies for WeasyPrint
@@ -48,44 +122,72 @@ jobs:
         run: |
           pip install -r pdf_export/requirements.txt
 
-      # PDF 생성 (책 하나씩 순차 처리)
-      - name: Generate PDFs
+      # 서버에서 기존 PDF 다운로드 (증분 업데이트용)
+      - name: Download existing PDFs from server
+        continue-on-error: true
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ env.LIGHTSAIL_USERNAME }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            mkdir -p /opt/bitnami/apache/htdocs/weniVooks/public/pdf
+
+      # PDF 생성 (변경된 책만)
+      - name: Generate PDFs for changed books
         run: |
           cd pdf_export
+          mkdir -p ../public/pdf
 
-          # 특정 책이 지정된 경우
-          if [ -n "${{ github.event.inputs.book_name }}" ]; then
-            echo "📚 Generating PDF for: ${{ github.event.inputs.book_name }}"
-            python export_pdf.py "${{ github.event.inputs.book_name }}"
-          else
-            # 전체 책 목록 가져와서 하나씩 처리
-            echo "📚 Generating PDFs for all books..."
+          CHANGED_BOOKS="${{ needs.detect-changes.outputs.changed_books }}"
 
-            # _md 폴더에서 책 목록 추출
-            for book_dir in ../_md/*/; do
-              book_name=$(basename "$book_dir")
+          echo "📚 생성할 책 목록: $CHANGED_BOOKS"
+          echo ""
 
-              # 숨김 폴더 제외, chapter 폴더가 있는 경우만
-              if [[ ! "$book_name" =~ ^\. ]] && [ -d "../_md/$book_name/chapter01" ]; then
-                echo ""
-                echo "=========================================="
-                echo "📖 Processing: $book_name"
-                echo "=========================================="
+          for book_name in $CHANGED_BOOKS; do
+            # 책 폴더 존재 확인
+            if [ ! -d "../_md/$book_name" ]; then
+              echo "⚠️ 스킵: $book_name (폴더 없음)"
+              continue
+            fi
 
-                python export_pdf.py "$book_name" || echo "⚠️ Failed: $book_name"
+            # chapter 폴더 존재 확인
+            if [ ! -d "../_md/$book_name/chapter01" ]; then
+              echo "⚠️ 스킵: $book_name (chapter 폴더 없음)"
+              continue
+            fi
 
-                # API 요청 제한을 위해 잠시 대기 (Mermaid API)
-                sleep 2
-              fi
-            done
-          fi
+            echo ""
+            echo "=========================================="
+            echo "📖 Processing: $book_name"
+            echo "=========================================="
+
+            python export_pdf.py "$book_name" || echo "⚠️ Failed: $book_name"
+
+            # Mermaid API 부하 방지
+            sleep 1
+          done
 
           echo ""
-          echo "✅ PDF generation completed!"
+          echo "✅ PDF 생성 완료!"
           ls -la ../public/pdf/ 2>/dev/null || echo "No PDFs generated"
+
+      # 생성된 PDF가 있는지 확인
+      - name: Check generated PDFs
+        id: check_pdfs
+        run: |
+          if [ -d "public/pdf" ] && [ "$(ls -A public/pdf/*.pdf 2>/dev/null)" ]; then
+            echo "has_pdfs=true" >> $GITHUB_OUTPUT
+            echo "📄 생성된 PDF 파일:"
+            ls -la public/pdf/*.pdf
+          else
+            echo "has_pdfs=false" >> $GITHUB_OUTPUT
+            echo "⚠️ 생성된 PDF 없음"
+          fi
 
       # 생성된 PDF를 서버로 배포
       - name: Deploy PDFs to server
+        if: steps.check_pdfs.outputs.has_pdfs == 'true'
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
@@ -95,10 +197,17 @@ jobs:
           strip_components: 2
           target: '/opt/bitnami/apache/htdocs/weniVooks/public/pdf'
 
-      # 배포 완료 알림 (선택사항)
+      # 요약
       - name: Summary
         run: |
           echo "## PDF Generation Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Generated PDFs:" >> $GITHUB_STEP_SUMMARY
-          ls -la public/pdf/*.pdf 2>/dev/null | awk '{print "- " $NF}' >> $GITHUB_STEP_SUMMARY || echo "No PDFs found" >> $GITHUB_STEP_SUMMARY
+          echo "### 변경 감지된 책" >> $GITHUB_STEP_SUMMARY
+          echo "\`${{ needs.detect-changes.outputs.changed_books }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 생성된 PDF" >> $GITHUB_STEP_SUMMARY
+          if [ -d "public/pdf" ]; then
+            ls public/pdf/*.pdf 2>/dev/null | xargs -n1 basename | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "없음" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "없음" >> $GITHUB_STEP_SUMMARY
+          fi
