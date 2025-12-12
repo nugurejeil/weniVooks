@@ -70,9 +70,8 @@ jobs:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ${{ env.LIGHTSAIL_USERNAME }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-          source: '.next/**/*'
-          strip_components: 1
-          target: '/home/bitnami/htdocs/weniVooks/.next'
+          source: '.next/*'
+          target: '/opt/bitnami/apache/htdocs/weniVooks/'
 
       - name: Restart PM2 process
         uses: appleboy/ssh-action@master
