@@ -2,8 +2,8 @@ name: Generate PDF Books
 
 on:
   schedule:
-    # 한국시간 일요일 새벽 2시 = UTC 토요일 17:00
-    - cron: '0 17 * * 6'
+    # 한국시간 매달 2일 새벽 2시 = UTC 매달 1일 17:00
+    - cron: '0 17 1 * *'
   # 수동 실행도 가능
   workflow_dispatch:
     inputs:
