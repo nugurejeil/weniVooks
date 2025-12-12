@@ -120,3 +120,7 @@ fabric.properties
 
 cursor_curriculum_main.md
 manual.pdf
+
+# PDF export
+/public/pdf/
+/pdf_export/.mermaid_cache/

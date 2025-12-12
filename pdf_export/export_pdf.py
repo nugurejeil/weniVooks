@@ -27,7 +27,7 @@ from weasyprint.text.fonts import FontConfiguration
 PROJECT_ROOT = Path(__file__).parent.parent
 MD_DIR = PROJECT_ROOT / "_md"
 PUBLIC_DIR = PROJECT_ROOT / "public"
-OUTPUT_DIR = Path(__file__).parent / "output"
+OUTPUT_DIR = PROJECT_ROOT / "public" / "pdf"  # public/pdf로 변경하여 웹에서 직접 다운로드 가능
 MERMAID_CACHE_DIR = Path(__file__).parent / ".mermaid_cache"
 
 
@@ -92,7 +92,12 @@ def parse_frontmatter(content):
 
 
 def render_mermaid_to_image(mermaid_code):
-    """Mermaid 코드를 이미지로 변환 (mmdc CLI 사용)"""
+    """Mermaid 코드를 이미지로 변환 (mermaid.ink API 사용)"""
+    import urllib.request
+    import urllib.error
+    import zlib
+    import json
+
     # 캐시 디렉토리 생성
     MERMAID_CACHE_DIR.mkdir(exist_ok=True)
 
@@ -104,34 +109,40 @@ def render_mermaid_to_image(mermaid_code):
     if cache_file.exists():
         return str(cache_file)
 
-    # 임시 mmd 파일 생성
-    temp_mmd = MERMAID_CACHE_DIR / f"{code_hash}.mmd"
-    temp_mmd.write_text(mermaid_code, encoding="utf-8")
-
     try:
-        # mmdc (mermaid-cli) 실행
-        result = subprocess.run(
-            ["mmdc", "-i", str(temp_mmd), "-o", str(cache_file), "-b", "transparent"],
-            capture_output=True,
-            text=True,
-            timeout=30
-        )
+        # mermaid.ink용 pako 인코딩
+        # JSON 형태로 감싸기
+        payload = json.dumps({
+            "code": mermaid_code,
+            "mermaid": {"theme": "default"}
+        }, ensure_ascii=False)
 
-        if result.returncode == 0 and cache_file.exists():
-            return str(cache_file)
-        else:
-            print(f"   Mermaid 렌더링 실패: {result.stderr}")
-            return None
-    except FileNotFoundError:
-        print("   경고: mermaid-cli(mmdc)가 설치되지 않았습니다. 'npm install -g @mermaid-js/mermaid-cli'로 설치하세요.")
+        # pako (deflate) 압축 + base64 URL-safe 인코딩
+        compressed = zlib.compress(payload.encode('utf-8'), 9)
+        encoded = base64.urlsafe_b64encode(compressed).decode('ascii')
+
+        # mermaid.ink API URL (PNG, 흰색 배경)
+        url = f"https://mermaid.ink/img/pako:{encoded}?type=png&bgColor=!white"
+
+        req = urllib.request.Request(url, headers={'User-Agent': 'Wenivooks-PDF-Export/1.0'})
+
+        with urllib.request.urlopen(req, timeout=30) as response:
+            image_data = response.read()
+
+        # 캐시에 저장
+        cache_file.write_bytes(image_data)
+        print(f"   Mermaid 다이어그램 생성 완료 (캐시: {code_hash[:8]})")
+        return str(cache_file)
+
+    except urllib.error.HTTPError as e:
+        print(f"   Mermaid 렌더링 실패 (HTTP {e.code}): {e.reason}")
         return None
-    except subprocess.TimeoutExpired:
-        print("   경고: Mermaid 렌더링 시간 초과")
+    except urllib.error.URLError as e:
+        print(f"   Mermaid API 연결 실패: {e.reason}")
         return None
-    finally:
-        # 임시 파일 삭제
-        if temp_mmd.exists():
-            temp_mmd.unlink()
+    except Exception as e:
+        print(f"   Mermaid 렌더링 오류: {e}")
+        return None
 
 
 def process_custom_directives(content):
@@ -423,6 +434,7 @@ def get_book_css():
     }
 
     @page :first {
+        margin: 0;
         @top-center { content: none; }
         @bottom-center { content: none; }
     }
@@ -445,19 +457,19 @@ def get_book_css():
     /* 표지 이미지가 있는 경우 */
     .cover-image-page {
         padding: 0;
-        margin: -2cm -2.5cm;
-        width: calc(100% + 5cm);
-        height: calc(100vh + 4cm);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        margin: 0;
+        width: 100%;
+        height: 100vh;
+        display: block;
+        overflow: hidden;
     }
 
     .cover-image {
         width: 100%;
         height: 100%;
-        object-fit: contain;
-        max-width: none;
+        object-fit: cover;  /* 페이지에 꽉 차게, 비율 유지하며 넘치는 부분 잘림 */
+        object-position: center;
+        display: block;
     }
 
     .book-title {
