@@ -1,4 +1,13 @@
 @import '@/styles/theme.scss';
+
+.titleWrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 1rem;
+  flex-shrink: 0;
+}
+
 .title {
   font-size: 1.4rem;
   height: 5rem;
@@ -6,7 +15,7 @@
   align-items: center;
   padding: 0 2rem;
   flex-shrink: 0;
-  width: 100%;
+  flex-grow: 1;
   box-sizing: border-box;
 }
 

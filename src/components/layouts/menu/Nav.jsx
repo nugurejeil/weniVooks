@@ -7,6 +7,8 @@ import { usePathname } from 'next/navigation';
 import styles from './Nav.module.scss';
 import SVGNavArrow from '@/components/svg/SVGNavArrow';
 import ScrollWrap from './ScrollWrap';
+import PdfDownloadButton from '@/components/pages/PdfDownloadButton';
+import { useBook } from '@/context/BookContext';
 
 const MenuItem = (props) => {
   const { title, link, sections } = props;
@@ -65,12 +67,17 @@ const MenuItem = (props) => {
 
 export default function Nav({ data }) {
   const { title, link, sections } = data;
+  const { bookName, hasPdf } = useBook();
+
   return (
     <>
-      <h3 className={styles.title}>
-        <span className="a11y-hidden">목차:</span>
-        <Link href={link}>{title}</Link>
-      </h3>
+      <div className={styles.titleWrap}>
+        <h3 className={styles.title}>
+          <span className="a11y-hidden">목차:</span>
+          <Link href={link}>{title}</Link>
+        </h3>
+        {hasPdf && <PdfDownloadButton bookName={bookName} />}
+      </div>
 
       <ScrollWrap id="naviWrap">
         <nav className={styles.nav}>

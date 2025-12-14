@@ -17,7 +17,7 @@ import Footer from '../footer/Footer';
 import SVGList from '../../svg/SVGList';
 import SVGListClose from '../../svg/SVGListClose';
 
-export default function Side(props) {
+export default function Side({ data }) {
   const path = usePathname();
 
   const { windowWidth } = useWindowSize();
@@ -129,7 +129,7 @@ export default function Side(props) {
       {isMenuShow && (
         <>
           <div ref={slideRef} className={classNames(styles.side)}>
-            <Nav {...props} />
+            <Nav data={data} />
             {windowWidth !== null && windowWidth > 1024 && <Footer />}
             <BtnIcon
               className={styles.btnClose}

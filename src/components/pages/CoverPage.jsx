@@ -1,6 +1,12 @@
+'use client';
+
 import Image from 'next/image';
+import PdfDownloadButton from './PdfDownloadButton';
+import { useBook } from '@/context/BookContext';
 
 export default function CoverPage({ TITLE, COVER }) {
+  const { bookName, hasPdf } = useBook();
+
   return (
     <div className="content__wrap">
       <main className="main">
@@ -13,6 +19,11 @@ export default function CoverPage({ TITLE, COVER }) {
           height={800}
           priority={true}
         />
+        {hasPdf && (
+          <div style={{ textAlign: 'center' }}>
+            <PdfDownloadButton bookName={bookName} variant="cover" />
+          </div>
+        )}
       </main>
     </div>
   );
