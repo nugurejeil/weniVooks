@@ -21,13 +21,14 @@ export default async function ContentPage({
 
     // Mermaid 다이어그램 포함 확인
     const hasMermaid = htmlContent.includes('mermaid-wrapper');
-    
+
     if (hasMermaid) {
       return (
         <MermaidContentPage
           chapter={chapter}
           page={page}
           DEFAULT_PATH={DEFAULT_PATH}
+          EDITOR={EDITOR}
         />
       );
     }
