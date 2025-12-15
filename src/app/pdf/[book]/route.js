@@ -6,7 +6,12 @@ import path from 'path';
 export async function GET(request, { params }) {
   const book = params.book;
   const filename = book.endsWith('.pdf') ? book : `${book}.pdf`;
-  const pdfPath = path.join(process.cwd(), 'public', 'pdf', filename);
+
+  // 로컬: public/pdf/, 서버: /opt/bitnami/apache/htdocs/pdf/
+  const localPath = path.join(process.cwd(), 'public', 'pdf', filename);
+  const serverPath = `/opt/bitnami/apache/htdocs/pdf/${filename}`;
+
+  const pdfPath = fs.existsSync(localPath) ? localPath : serverPath;
 
   if (!fs.existsSync(pdfPath)) {
     return NextResponse.json(
