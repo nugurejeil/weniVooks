@@ -109,6 +109,7 @@ export default async function MermaidContentPage({
             <link rel="stylesheet" href="/codeblocks/codemirror.css" />
             <Script src="/codeblocks/codemirror.js" />
             <Script defer src="/codeblocks/javascript/js-repl.js" />
+            <Script defer src="/codeblocks/codemirror.js" />
             <Script defer src="/codeblocks/javascript/javascript.js" />
             <Script defer src="/codeblocks/codemirror/active-line.js" />
           </>
