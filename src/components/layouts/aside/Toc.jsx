@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import styles from './Toc.module.scss';
@@ -44,26 +43,6 @@ const getIntersectionObserver = (setState) => {
 export default function Toc({ toggleMenu }) {
   const [currentId, setCurrentId] = useState('');
   const [headingEls, setHeadingEls] = useState([]);
-
-  // 페이지 로드 시 해시값에 해당하는 요소로 스크롤
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      // # 기호 제거
-      const id = hash.substring(1);
-      const element = document.getElementById(id);
-      if (element) {
-        // 약간의 지연을 주어 DOM이 완전히 로드된 후 스크롤
-        setTimeout(() => {
-          // 네비게이션바 높이 + 추가 여백(10px)만큼 offset 적용
-          const yOffset = -80;
-          const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-          setCurrentId(id);
-        }, 100);
-      }
-    }
-  }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {
     const observer = getIntersectionObserver(setCurrentId);
@@ -116,11 +95,10 @@ export default function Toc({ toggleMenu }) {
       <ol className={styles.toc}>
         {sections.map((section, index) => (
           <li key={index}>
-            <Link
-              href={`#${section.title}`}
+            <button
+              type="button"
               className={currentId === section.title ? styles.active : ''}
-              onClick={e => {
-                e.preventDefault();
+              onClick={() => {
                 toggleMenu && toggleMenu();
                 setCurrentId(section.title);
                 const element = document.getElementById(section.title);
@@ -128,13 +106,11 @@ export default function Toc({ toggleMenu }) {
                   const yOffset = -80; // 네비게이션바 높이(70px) + 추가 여백(10px)
                   const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
                   window.scrollTo({ top: y, behavior: 'smooth' });
-                  // URL 해시도 변경
-                  window.history.replaceState(null, '', `#${section.title}`);
                 }
               }}
             >
               {section.title}
-            </Link>
+            </button>
             {section.section.length > 0 && renderToc(section.section)}
           </li>
         ))}

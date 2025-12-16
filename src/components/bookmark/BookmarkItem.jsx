@@ -22,34 +22,28 @@ export default function BookmarkItem({
 
   const handleLinkClick = (e) => {
     e.preventDefault();
-    const targetUrl = url.includes('#') ? url : `${url}#${encodeURIComponent(title)}`;
-    
+
     // 현재 페이지와 같은 페이지인지 확인
     const currentPath = window.location.pathname;
-    const targetPath = targetUrl.split('#')[0];
-    
+    const targetPath = url.split('#')[0] || url;
+
     if (currentPath === targetPath) {
-      // 같은 페이지라면 스크롤만 실행
-      const hash = targetUrl.split('#')[1];
-      if (hash) {
-        const elementId = decodeURIComponent(hash);
-        let targetElement = document.getElementById(elementId);
-        
-        if (!targetElement) {
-          targetElement = document.getElementById(hash);
-        }
-        
-        if (targetElement) {
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-          window.history.replaceState(null, null, `#${hash}`);
-        }
+      // 같은 페이지라면 스크롤만 실행 (해시 없이)
+      const elementId = title;
+      let targetElement = document.getElementById(elementId);
+
+      if (!targetElement) {
+        targetElement = document.getElementById(encodeURIComponent(title));
+      }
+
+      if (targetElement) {
+        const yOffset = -80; // 네비게이션바 높이 + 여백
+        const y = targetElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
       }
     } else {
-      // 다른 페이지라면 페이지 이동
-      router.push(targetUrl);
+      // 다른 페이지라면 페이지 이동 (해시 없이)
+      router.push(targetPath);
     }
   };
 
@@ -64,8 +58,8 @@ export default function BookmarkItem({
   // 토글된 상태에 따라 북마크 아이콘 상태 결정
   const isBookmarked = !isToggled;
 
-  // 헤딩 ID를 포함한 URL 생성
-  const headingUrl = url.includes('#') ? url : `${url}#${title}`;
+  // 해시 없는 URL 생성
+  const targetPath = url.split('#')[0] || url;
 
   return (
     <div className={styles.bookmarkItem}>
@@ -89,7 +83,7 @@ export default function BookmarkItem({
             {section}
           </Link>
         </div>
-        <a href={headingUrl} onClick={handleLinkClick} className={styles.bookmarkLink}>
+        <a href={targetPath} onClick={handleLinkClick} className={styles.bookmarkLink}>
           <div className={styles.bookmarkTitle}>{title}</div>
         </a>
       </div>
