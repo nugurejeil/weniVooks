@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import styles from './BookmarkItem.module.scss';
 
 import BookmarkIcon from '../common/icons/BookmarkIcon';
+import { createScrollUrl } from '@/utils/useHashScroll';
 
 export default function BookmarkItem({
   bookmark,
@@ -42,8 +43,8 @@ export default function BookmarkItem({
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
     } else {
-      // 다른 페이지라면 페이지 이동 (해시 없이)
-      router.push(targetPath);
+      // 다른 페이지라면 스크롤 대상이 포함된 URL로 이동
+      router.push(createScrollUrl(targetPath, title));
     }
   };
 
