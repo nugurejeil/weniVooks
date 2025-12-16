@@ -37,11 +37,19 @@
 }
 
 .toc {
-  a {
+  button {
     display: block;
     padding: 0.9rem;
     transition: background-color 0.3s;
     outline-offset: -1px;
+    // 버튼 기본 스타일 리셋
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
 
     &.active {
       font-weight: bold;
@@ -55,13 +63,16 @@
       }
     }
   }
-  & > li > a {
+  & > li > button {
+    padding: 0.9rem;
     padding-left: 2rem;
   }
-  & > li > ol > li > a {
+  & > li > ol > li > button {
+    padding: 0.9rem;
     padding-left: 4rem;
   }
-  & > li > ol > li > ol > li > a {
+  & > li > ol > li > ol > li > button {
+    padding: 0.9rem;
     padding-left: 6rem;
   }
 }

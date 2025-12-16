@@ -22,10 +22,11 @@ export default function Bookmark() {
   const [toggledBookmarks, setToggledBookmarks] = useState(new Set()); // 토글된 북마크 추적
   const { windowWidth } = useWindowSize();
 
-  // URL 해시 생성 함수 - 공백을 %20으로 대체
+  // URL 생성 시 해시를 사용하지 않음
+  // 북마크 클릭 시 JavaScript로 스크롤 이동 처리
   const createUrlHash = useCallback((text) => {
-    if (!text) return '';
-    return encodeURIComponent(text.toLowerCase());
+    // 해시 없이 빈 문자열 반환 (기존 호환성 유지)
+    return '';
   }, []);
 
   // 책 ID로 책 제목 찾기
@@ -57,9 +58,7 @@ export default function Bookmark() {
                   chapter: chapterDisplay,
                   chapterNum: chapterNum ? parseInt(chapterNum[0]) : 0,
                   section: section,
-                  url: `/${bookId}/${chapter}/${section}#${createUrlHash(
-                    headingData.title,
-                  )}`,
+                  url: `/${bookId}/${chapter}/${section}`,
                   timestamp: headingData.timestamp,
                 });
               });
