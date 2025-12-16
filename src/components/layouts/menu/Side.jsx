@@ -50,7 +50,10 @@ export default function Side({ data }) {
     if (isMenuShow) {
       // SlideOut(닫힘)
       slideRef?.current.classList.add(styles.slideOut);
-      handleAllowScroll();
+      // 모바일에서만 handleAllowScroll 호출 (모바일에서만 handlePreventScroll이 호출되므로)
+      if (windowWidth <= 1024) {
+        handleAllowScroll();
+      }
       setTimeout(() => {
         setIsMenuShow(false);
         if (windowWidth > 1024) {
@@ -82,14 +85,18 @@ export default function Side({ data }) {
     }
   };
 
+  // windowWidth 변경 시 메뉴 상태만 조정 (스크롤 위치 변경 없음)
   useEffect(() => {
     if (windowWidth <= 1024 && isMenuShow) {
+      // 모바일로 전환 시 메뉴 닫기 (body style만 제거, 스크롤 위치 유지)
+      document.body.removeAttribute('style');
       setIsMenuShow(false);
     } else if (windowWidth > 1024) {
+      // PC로 전환 시 메뉴 상태 복원 (body style만 제거, 스크롤 위치 유지)
+      document.body.removeAttribute('style');
       setIsMenuShow(isSavedClose ? false : true);
-      handleAllowScroll();
     }
-  }, [windowWidth, path]);
+  }, [windowWidth]);
 
   useEffect(() => {
     document.body.removeAttribute('style');
