@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025년 커밋 통계</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        .chart-container {
+            position: relative;
+            height: 500px;
+            margin-bottom: 40px;
+        }
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        .stats-table th,
+        .stats-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .stats-table th {
+            background: #f8f9fa;
+            color: #333;
+            font-weight: 600;
+        }
+        .stats-table tr:hover {
+            background: #f8f9fa;
+        }
+        .rank {
+            font-weight: bold;
+            color: #667eea;
+        }
+        .rank-1 { color: #ffd700; font-size: 1.2em; }
+        .rank-2 { color: #c0c0c0; font-size: 1.1em; }
+        .rank-3 { color: #cd7f32; font-size: 1.05em; }
+        .commit-count {
+            font-weight: bold;
+            color: #764ba2;
+        }
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #856404;
+        }
+        .total {
+            text-align: center;
+            font-size: 1.5em;
+            color: #333;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>2025년 커밋 통계</h1>
+        <p class="subtitle">Wenivooks Repository - 기여자별 커밋 현황</p>
+
+        <div class="chart-container">
+            <canvas id="commitChart"></canvas>
+        </div>
+
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>순위</th>
+                    <th>기여자</th>
+                    <th>커밋 수</th>
+                    <th>비율</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="rank rank-1">🥇 1위</span></td>
+                    <td>paullabkorea (+ WeniVooks Bot + hojun.lee)</td>
+                    <td class="commit-count">180</td>
+                    <td>34.2%</td>
+                </tr>
+                <tr>
+                    <td><span class="rank rank-2">🥈 2위</span></td>
+                    <td>gyeongbaek</td>
+                    <td class="commit-count">123</td>
+                    <td>23.4%</td>
+                </tr>
+                <tr>
+                    <td><span class="rank rank-3">🥉 3위</span></td>
+                    <td>Iam-Ujin</td>
+                    <td class="commit-count">48</td>
+                    <td>9.1%</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">4위</span></td>
+                    <td>rosamondkim</td>
+                    <td class="commit-count">47</td>
+                    <td>8.9%</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">5위</span></td>
+                    <td>chimaek</td>
+                    <td class="commit-count">42</td>
+                    <td>8.0%</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">6위</span></td>
+                    <td>lynnjean</td>
+                    <td class="commit-count">36</td>
+                    <td>6.8%</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">7위</span></td>
+                    <td>Sunryeo</td>
+                    <td class="commit-count">35</td>
+                    <td>6.7%</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">8위</span></td>
+                    <td>Ruler-H (+ Hwang Byeong Heon)</td>
+                    <td class="commit-count">9</td>
+                    <td>1.7%</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">9위</span></td>
+                    <td>Jin Kim</td>
+                    <td class="commit-count">2</td>
+                    <td>0.4%</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">9위</span></td>
+                    <td>heyoni</td>
+                    <td class="commit-count">2</td>
+                    <td>0.4%</td>
+                </tr>
+                <tr>
+                    <td><span class="rank">9위</span></td>
+                    <td>happydata1510</td>
+                    <td class="commit-count">2</td>
+                    <td>0.4%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note">
+            <strong>📌 참고:</strong><br>
+            • paullabkorea, WeniVooks Bot, hojun.lee는 동일인으로 합산되었습니다. (76 + 87 + 17 = 180)<br>
+            • Ruler-H, Hwang Byeong Heon은 동일인으로 합산되었습니다. (7 + 2 = 9)
+        </div>
+
+        <div class="total">
+            총 커밋 수: <strong>526</strong>개
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('commitChart').getContext('2d');
+
+        const data = {
+            labels: [
+                'paullabkorea\n(+WeniVooks Bot\n+hojun.lee)',
+                'gyeongbaek',
+                'Iam-Ujin',
+                'rosamondkim',
+                'chimaek',
+                'lynnjean',
+                'Sunryeo',
+                'Ruler-H\n(+Hwang Byeong Heon)',
+                '기타 (3명)'
+            ],
+            datasets: [{
+                label: '커밋 수',
+                data: [180, 123, 48, 47, 42, 36, 35, 9, 6],
+                backgroundColor: [
+                    '#667eea',
+                    '#764ba2',
+                    '#f093fb',
+                    '#f5576c',
+                    '#4facfe',
+                    '#00f2fe',
+                    '#43e97b',
+                    '#fa709a',
+                    '#a8a8a8'
+                ],
+                borderColor: '#fff',
+                borderWidth: 2,
+                borderRadius: 8,
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#333',
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 13 },
+                        padding: 12,
+                        callbacks: {
+                            label: function(context) {
+                                const total = 526;
+                                const percentage = ((context.raw / total) * 100).toFixed(1);
+                                return `${context.raw}개 커밋 (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#eee'
+                        },
+                        ticks: {
+                            font: { size: 12 }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: { size: 11 },
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
